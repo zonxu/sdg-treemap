@@ -318,13 +318,72 @@
     transition: none;
   }
 
+  /* ─── Mobile Adaptation ─── */
+  @media (max-width: 768px) {
+    :root {
+      --header-h: 76px;
+    }
 
+    /* Header */
+    .header-top {
+      padding: 0 14px;
+      flex-wrap: wrap;
+    }
+    .main-title {
+      font-size: 13px;
+    }
+    .year-switcher {
+      margin-left: 4px;
+    }
+    .year-switcher .ys-item {
+      font-size: 11px;
+      padding: 2px 4px;
+    }
+
+    /* Lang switcher: flow inline instead of fixed */
+    .lang-switcher {
+      position: static;
+      margin-left: auto;
+    }
+    .lang-switcher .ls-item {
+      font-size: 10px;
+      padding: 2px 6px;
+    }
+    .lang-switcher .ls-sep {
+      font-size: 9px;
+    }
+
+    /* SDG Nav: horizontal scroll */
+    .sdg-nav {
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding: 0 12px;
+      height: 34px;
+      padding-bottom: 6px;
+      scrollbar-width: none;          /* Firefox */
+      -ms-overflow-style: none;       /* IE/Edge */
+    }
+    .sdg-nav::-webkit-scrollbar {
+      display: none;                  /* Chrome/Safari */
+    }
+    .sdg-nav-item .sdg-num-text {
+      font-size: 10px;
+      padding: 0 6px;
+    }
+    .sdg-nav-sep {
+      height: 18px;
+    }
+
+    /* Tile padding tweak */
+    .tile-inner {
+      padding: 10px 12px;
+    }
+  }
 
 </style>
 </head>
 <body>
-
-<div class="lang-switcher"><a href="sdg-treemap.html" class="ls-item">中</a><span class="ls-sep">/</span><span class="ls-item active">EN</span></div>
 
 <div class="header" id="header">
   <div class="header-top">
@@ -335,6 +394,7 @@
       <span class="ys-item active">2024</span>
       <a href="sdg-treemap-2023-en.html" class="ys-item">2023</a>
     </span>
+    <div class="lang-switcher"><a href="sdg-treemap.html" class="ls-item">中</a><span class="ls-sep">/</span><span class="ls-item active">EN</span></div>
   </div>
   <div class="sdg-nav" id="sdgNav"></div>
 </div>
@@ -1042,7 +1102,7 @@ treemapEl.addEventListener('touchmove', e => {
 treemapEl.addEventListener('touchend', e => {
   e.preventDefault(); clearTimeout(longPressT);
   if (!touchExploring && touchActive) {
-    setTimeout(() => { cursorIn = false; cx = cy = -1; updateWeights(); startAnim(); }, 2000);
+    setTimeout(() => { cursorIn = false; cx = cy = -1; updateWeights(); startAnim(); }, 3000);
   } else { cursorIn = false; cx = cy = -1; updateWeights(); startAnim(); }
   touchActive = false; touchExploring = false;
 }, { passive: false });
