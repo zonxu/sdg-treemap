@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>腾讯践行联合国可持续发展目标 SDGs (2023)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;600;700;900&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #f5f5f4;
+    --text: #1a1a1a;
+    --text-light: #666;
+    --text-muted: #999;
+    --header-h: 90px;
+    --top-offset: var(--header-h);
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    font-family: 'Noto Sans SC', 'Inter', -apple-system, 'PingFang SC', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    color: var(--text);
+  }
+
+  /* ─── Header ─── */
+  .header {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: var(--header-h);
+    background: #fff;
+    z-index: 100;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    border-bottom: 1px solid #e8e8e6;
+    cursor: default; overflow: visible;
+  }
+  .header-top {
+    display: flex; align-items: baseline;
+    padding: 0 24px; flex-shrink: 0;
+  }
+  .main-title {
+    font-size: 15px; font-weight: 700;
+    letter-spacing: -0.2px; color: var(--text);
+    white-space: nowrap;
+  }
+  .main-title .year {
+    font-weight: 400; font-size: 13px;
+    opacity: 0.35; margin-left: 6px;
+  }
+  .year-switcher {
+    display: inline-flex; align-items: center;
+    gap: 2px;
+    margin-left: 8px;
+    flex-shrink: 0;
+  }
+  .year-switcher .ys-item {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px; font-weight: 500;
+    color: var(--text);
+    opacity: 0.2;
+    padding: 2px 6px;
+    border-radius: 3px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.25s, background 0.25s;
+    letter-spacing: -0.2px;
+  }
+  .year-switcher .ys-item:hover { opacity: 0.5; background: rgba(0,0,0,0.04); }
+  .year-switcher .ys-item.active {
+    opacity: 0.45; font-weight: 700;
+    cursor: default;
+  }
+  .year-switcher .ys-item.active:hover { background: none; }
+
+  .lang-switcher {
+    position: fixed;
+    top: 16px; right: 24px;
+    z-index: 101;
+    display: flex; align-items: center; gap: 2px;
+  }
+  .lang-switcher .ls-item {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px; font-weight: 500;
+    color: var(--text);
+    opacity: 0.2;
+    padding: 3px 8px;
+    border-radius: 3px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.25s, background 0.25s;
+  }
+  .lang-switcher .ls-item:hover { opacity: 0.5; background: rgba(0,0,0,0.04); }
+  .lang-switcher .ls-item.active {
+    opacity: 0.5; font-weight: 700;
+    cursor: default;
+  }
+  .lang-switcher .ls-item.active:hover { background: none; }
+  .lang-switcher .ls-sep {
+    font-size: 10px; color: var(--text); opacity: 0.12;
+  }
+
+  /* ─── Preface Overlay ─── */
+  .preface-overlay {
+    position: fixed;
+    top: var(--header-h);
+    left: 0; right: 0; bottom: 0;
+    z-index: 90;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.45s cubic-bezier(0.4,0,0.2,1);
+  }
+  .preface-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .preface-overlay .preface-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(255,255,255,0.82);
+    backdrop-filter: blur(24px) saturate(1.2);
+    -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  }
+  .preface-overlay .preface-content {
+    position: relative; z-index: 1;
+    max-width: 520px; margin: 0 auto;
+    padding: 0 32px; height: 100%;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    transform: translateY(-12px);
+    transition: transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.4s ease;
+    opacity: 0;
+  }
+  .preface-overlay.show .preface-content {
+    transform: translateY(0); opacity: 1;
+  }
+  .preface-overlay .preface-content p {
+    font-size: 13.5px; font-weight: 400;
+    line-height: 2.1; color: var(--text-light);
+    letter-spacing: 0.2px; text-align: justify;
+  }
+  .preface-overlay .preface-content p + p { margin-top: 20px; }
+  .preface-overlay .preface-content p:last-child {
+    font-weight: 500; color: var(--text); opacity: 0.65;
+  }
+
+
+  /* ─── SDG Nav ─── */
+  .sdg-nav {
+    display: flex; align-items: flex-end;
+    padding: 0 24px; height: 40px; flex-shrink: 0;
+    padding-bottom: 8px;
+    gap: 0; overflow: hidden;
+  }
+  .sdg-nav-item {
+    flex-shrink: 0;
+    display: flex; align-items: flex-end;
+    justify-content: center;
+    cursor: default;
+    user-select: none;
+    transition: opacity 0.2s ease;
+  }
+  .sdg-nav-item:hover { opacity: 1; }
+  .sdg-nav-item .sdg-num-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px; font-weight: 600;
+    color: var(--text);
+    opacity: 0.35;
+    letter-spacing: -0.3px;
+    transition: opacity 0.2s;
+    padding: 0 10px;
+  }
+  .sdg-nav-item:first-child .sdg-num-text { padding-left: 0; }
+  .sdg-nav-item:hover .sdg-num-text { opacity: 1; color: var(--sdg-color); }
+  .sdg-nav-sep {
+    flex-shrink: 0;
+    width: 1px;
+    height: 28px;
+    background: var(--text);
+    opacity: 0.1;
+    user-select: none;
+    align-self: flex-end;
+  }
+
+  /* ─── Treemap ─── */
+  .treemap {
+    position: fixed;
+    top: var(--top-offset);
+    left: 0; right: 0; bottom: 0;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  /* ─── Tile ─── */
+  .tile {
+    position: absolute;
+    overflow: hidden;
+    cursor: default;
+    will-change: transform, opacity;
+    transform-origin: 0 0;
+    contain: layout style paint;
+    backface-visibility: hidden;
+  }
+
+  .tile-inner {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    padding: 14px 16px;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* SDG filter states */
+  .tile.dimmed { filter: grayscale(0.6) brightness(0.88); opacity: 0.35; }
+  .tile.highlighted { filter: brightness(1.03) saturate(1.3); }
+
+  /* ─── Tile content ─── */
+  .tile .sdg-badge {
+    font-size: 9px; font-weight: 500;
+    opacity: 0.4; letter-spacing: 0.2px;
+    margin-bottom: 3px; flex-shrink: 0;
+    white-space: nowrap; overflow: hidden;
+    text-overflow: ellipsis;
+    transition: opacity 0.35s ease;
+  }
+
+  .tile .project-name {
+    font-size: 13px; font-weight: 700;
+    line-height: 1.35; letter-spacing: -0.2px;
+    flex-shrink: 0; z-index: 1;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .tile .spacer { flex: 1; min-height: 2px; }
+
+  .tile .number-block {
+    flex-shrink: 0; z-index: 1; overflow: hidden;
+  }
+  .tile .number-row {
+    display: flex; align-items: baseline; gap: 3px;
+  }
+  .tile .number-val {
+    font-family: 'Inter', 'Noto Sans SC', sans-serif;
+    font-weight: 900; line-height: 1;
+    letter-spacing: -1.5px;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.82;
+  }
+  .tile .number-unit {
+    font-size: 12px; font-weight: 500;
+    opacity: 0.45; letter-spacing: 0;
+  }
+
+  .tile .subtitle-text {
+    font-size: 11px; font-weight: 500;
+    line-height: 1.55; opacity: 0;
+    margin-top: 6px; flex-shrink: 0; overflow: hidden;
+    transition: opacity 0.35s ease;
+    clip-path: inset(0 0 100% 0);
+    transition: opacity 0.35s ease, clip-path 0.35s ease;
+  }
+
+  .tile .desc-text {
+    font-size: 10.5px; font-weight: 400;
+    line-height: 1.7; opacity: 0;
+    margin-top: 4px; flex-shrink: 1; overflow: hidden;
+    clip-path: inset(0 0 100% 0);
+    transition: opacity 0.35s ease, clip-path 0.35s ease;
+  }
+
+  .tile .default-subtitle {
+    font-size: 11px; font-weight: 400;
+    line-height: 1.6; opacity: 0.45;
+    flex-shrink: 0; overflow: hidden;
+    margin-top: auto;
+  }
+
+  /* ─── 17 SDG Official Colors (pastel tint for bg, dark for text) ─── */
+  .sdg-1  { --tile-bg: #fef3cd; --tile-text: #6b5a00; }
+  .sdg-2  { --tile-bg: #fde0c5; --tile-text: #7a3d00; }
+  .sdg-3  { --tile-bg: #f2d1e4; --tile-text: #6e1e4a; }
+  .sdg-4  { --tile-bg: #e8f5cc; --tile-text: #4a6b00; }
+  .sdg-5  { --tile-bg: #c8f5e8; --tile-text: #0a5c42; }
+  .sdg-6  { --tile-bg: #fdd8d2; --tile-text: #7a2216; }
+  .sdg-7  { --tile-bg: #d8d2f5; --tile-text: #2e1a6e; }
+  .sdg-8  { --tile-bg: #cee8f8; --tile-text: #0e4a72; }
+  .sdg-9  { --tile-bg: #c8d4f8; --tile-text: #142a6e; }
+  .sdg-10 { --tile-bg: #d8d0f2; --tile-text: #36286a; }
+  .sdg-11 { --tile-bg: #eecef5; --tile-text: #5c1470; }
+  .sdg-12 { --tile-bg: #fdd4cc; --tile-text: #7a2010; }
+  .sdg-13 { --tile-bg: #fde0c8; --tile-text: #7a4000; }
+  .sdg-14 { --tile-bg: #ddf5cc; --tile-text: #3a6e0a; }
+  .sdg-15 { --tile-bg: #d6cef5; --tile-text: #342870; }
+  .sdg-16 { --tile-bg: #f2cedf; --tile-text: #6e1646; }
+  .sdg-17 { --tile-bg: #e8c0c8; --tile-text: #6e0a20; }
+
+  .tile[class*="sdg-"] {
+    background: var(--tile-bg);
+    color: var(--tile-text);
+  }
+
+  /* ─── Entrance ─── */
+  .tile {
+    opacity: 0;
+    transform: translate(0,0) scale(0.92);
+  }
+  .tile.visible {
+    opacity: 1;
+    transform: translate(var(--tx, 0), var(--ty, 0));
+    transition: opacity 0.6s cubic-bezier(0.25,0.46,0.45,0.94),
+                transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+  /* After entrance, remove CSS transition so JS controls smoothly */
+  .tile.live {
+    transition: none;
+  }
+
+
+
+</style>
+</head>
+<body>
+
+<div class="lang-switcher"><span class="ls-item active">中</span><span class="ls-sep">/</span><a href="sdg-treemap-2023-en.html" class="ls-item">EN</a></div>
+
+<div class="header" id="header">
+  <div class="header-top">
+    <div class="main-title" id="titleText">
+      腾讯践行联合国可持续发展目标 SDGs
+    </div>
+    <span class="year-switcher">
+      <a href="sdg-treemap.html" class="ys-item">2024</a>
+      <span class="ys-item active">2023</span>
+    </span>
+  </div>
+  <div class="sdg-nav" id="sdgNav"></div>
+</div>
+
+<div class="preface-overlay" id="prefaceOverlay">
+  <div class="preface-backdrop"></div>
+  <div class="preface-content">
+    <p>作为一家以科技向善为使命愿景的互联网企业，已走过25年创业之路的腾讯，坚持从产品中来，到用户中去，探索商业价值与社会价值的融合发展。在可持续社会价值创新战略的指引下，一些新产品、新项目在腾讯孵化而生，聚焦各类社会议题，与社会各方共创，为实现社会的可持续发展贡献技术之力。</p>
+    <p>立足国家发展战略、融合联合国可持续发展目标（SDGs），腾讯SSV坚持做"难而正确"的事，以对人与社会的关心为底层逻辑，以人文价值为参照，在推进社会价值创造的过程中，探索出"社会共创+系统化创新+在地生长"的核心方法，让科技创新更有温度，让善意生长更多可能。</p>
+  </div>
+</div>
+
+<div class="treemap" id="treemap"></div>
+
+
+<script>
+(function() {
+'use strict';
+
+/* ═══════════════════════════════════════════════════════════
+   TEXT METRICS CACHE — Canvas pre-measurement
+   ═══════════════════════════════════════════════════════════ */
+const TMC = (() => {
+  const c = document.createElement('canvas').getContext('2d');
+  const m = new Map();
+  function measure(text, size, weight, family) {
+    const k = text + '|' + size + '|' + weight;
+    if (m.has(k)) return m.get(k);
+    c.font = weight + ' ' + size + 'px ' + family;
+    const r = { w: c.measureText(text).width, h: size * 1.35 };
+    m.set(k, r);
+    return r;
+  }
+  function precompute(d) {
+    const sf = "'Noto Sans SC',sans-serif";
+    const nf = "'Inter',sans-serif";
+    d._tm = {};
+    // Project name at each tier
+    [16,14.5,13,11,10,9,8].forEach(s => { d._tm['n'+s] = measure(d.project, s, '700', sf); });
+    // Numbers
+    if (d.numbers) d.numbers.forEach((n,i) => {
+      [52,40,30,22,18,15,13].forEach(s => { d._tm['v'+i+'_'+s] = measure(formatNumber(n), s, '900', nf); });
+    });
+    // Badge
+    const badgeText = String(d.sdg).padStart(2,'0') + '. ' + SDG_NAMES[d.sdg];
+    [9.5,9,8.5,8,7.5,7,6.5].forEach(s => { d._tm['b'+s] = measure(badgeText, s, '500', sf); });
+    // Subtitle (measure first line, ~30 chars)
+    if (d.subtitle) {
+      const subText = d.subtitle.replace(/\n.*/,'').substring(0,30);
+      [11,10.5,10,9,8.5,8,7].forEach(s => { d._tm['s'+s] = measure(subText, s, '500', sf); });
+    }
+    // Desc (measure first ~25 chars)
+    if (d.desc) {
+      const descText = d.desc.substring(0,25);
+      [10.5,10,9.5,8.5,8,7.5,7].forEach(s => { d._tm['d'+s] = measure(descText, s, '400', sf); });
+    }
+  }
+  return { measure, precompute };
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   DATA
+   ═══════════════════════════════════════════════════════════ */
+const SDG_NAMES = {
+  1:'无贫穷', 2:'零饥饿', 3:'良好健康与福祉',
+  4:'优质教育', 5:'性别平等', 6:'清洁饮水和卫生设施',
+  7:'经济适用的清洁能源', 8:'体面工作和经济增长', 9:'产业、创新和基础设施',
+  10:'减少不平等', 11:'可持续的城市和社区',
+  12:'负责任的消费和生产', 13:'气候行动',
+  14:'水下生物', 15:'陆地生物',
+  16:'和平、正义与强大机构', 17:'促进目标实现的伙伴关系'
+};
+// Official SDG colors (vibrant) for nav hover and hover interpolation
+const SDG_COLORS = {
+  1:'#E5CD00', 2:'#E5920D', 3:'#D4628B', 4:'#BED32E', 5:'#4CC9A2',
+  6:'#E26B56', 7:'#7B52C2', 8:'#5CB8E6', 9:'#3B6DC6', 10:'#8B78C6',
+  11:'#C946C9', 12:'#E25040', 13:'#E8943A', 14:'#BFEA50', 15:'#9B82D6',
+  16:'#D66A9E', 17:'#A51040'
+};
+
+// HSL for hover color interpolation
+const SDG_HSL = {};
+for (let i = 1; i <= 17; i++) {
+  // will be parsed from CSS custom properties
+  SDG_HSL[i] = null;
+}
+
+const DATA = [
+  { sdg:1, project:'乡村振兴活水计划', numbers:['1.78'], units:['亿元'], subtitle:'累计募款1.78亿元', desc:'引导社会力量参与乡村振兴，促进共同富裕。截至2023年底，已支持151个欠发达县的基层社会组织开展专业化建设，助力实施公益项目200余个，带动爱心支持267万余人次。2023年被世界银行、联合国粮农等组织评为年度全球最佳减贫案例之一。' },
+  { sdg:1, project:'耕耘者振兴计划', numbers:['77862'], units:['人'], subtitle:'线下培训总人数77,862人', desc:'开展"耕耘者振兴计划"培养乡村治理骨干和新型农业经营主体带头人。截至2024年5月，线下已累计开班829期；"村级服务平台"覆盖全国31省6.17万个村庄，服务村民1,252万余人。2023年荣获民政部第十二届中华慈善奖。' },
+  { sdg:1, project:'共富乡村', numbers:['125'], units:['县'], subtitle:'系统化解决方案推广至125县', desc:'探索总结出"机制+人才+数字化"的内生型共富乡村系统化解决方案，截至2023年12月底，已由政府主导推广到重庆、云南、广西、浙江、广东等省市区的125县。' },
+  { sdg:2, project:'国家作物种质库2.0项目', numbers:['2000'], units:['万元'], subtitle:'捐赠2,000万元', desc:'与中国农业科学院合作，旨在加强种质资源保护与利用，探索数字技术和信息技术推动种业振兴。' },
+  { sdg:2, project:'喀什设施农业', numbers:['3700'], units:['万元'], subtitle:'公益投入3,700万元', desc:'携手喀什市人民政府、深圳援疆前方指挥部联合启动喀什设施农业数字化提升试点示范项目。2023年7月至底，日光温室智能化改造部分为农户带来收入超30万元。' },
+  { sdg:3, project:'社会应急救援', numbers:['140'], units:['起+'], subtitle:'志愿者参与救助超140起', desc:'与深圳市宝安区共同打造"5分钟社会救援圈"项目。截至2023年底，培训的志愿者已参与救助超140起。QQ平台上线地震预警功能，实现微信、QQ双平台地震预警覆盖。' },
+  { sdg:3, project:'守护银发安全与健康', numbers:['50000'], units:['名+'], subtitle:'受益长者超过5万名', desc:'启动"银发共同守护计划"，创新提出"四级响应机制"，截至2023年12月底已应用于15家养老机构、250个社区、46个乡村。推出天籁inside助听器，将复杂场景下语音清晰度提升85%。' },
+  { sdg:3, project:'提升医疗人才素养', numbers:['1150'], units:['名+'], subtitle:'线下培训乡村医生超1,150名', desc:'联合国家卫健委等部门发起"公共卫生人才提升项目"，超过22万人参与线上新时代疾控能力提升学习。截至2023年7月，线下培训超过1,150名乡村医生。' },
+  { sdg:3, project:'关爱妇幼健康', numbers:['100000','100000'], units:['名','人'], subtitle:'已筛查新生儿10万余名\n完成妇女两癌筛查10万人', desc:'"红雨伞计划"截至2023年12月已筛查宁夏、贵州试点地区10万余名新生儿，实现先心病筛查覆盖从10%到接近100%。妇女"两癌综合防控"截至2023年底试点地区完成筛查10万人。' },
+  { sdg:4, project:'数字支教', numbers:['35000','2000'], units:['人','所+'], subtitle:'数字支教志愿者3.5万人\n服务乡村小学2,000余所', desc:'2023年在全国25省落地，志愿者授课超10万课时，助力实现支教事业的信息化、数字化转型升级。' },
+  { sdg:4, project:'科学苗子培养项目', numbers:['1800'], units:['名+'], subtitle:'累计报名学生1,800余名', desc:'面向中学生的科学人才培养公益项目，从2022年到2023年，来自全国25个省级行政区、200余所学校的1,800余名学生报名参与，最终选拔出102名学员，共产出64份研究论文。' },
+  { sdg:4, project:'青少年音乐科技培养', numbers:['110'], units:['所+'], subtitle:'参与学校110余所', desc:'国内首个面向中学生的音乐&科技跨学科培养项目。2023年共有来自110余所学校的390余位学生报名参与。' },
+  { sdg:5, project:'关注女性科学家', numbers:null, units:null, subtitle:'数学物理学、交通建筑两个领域首次出现女性获奖人', desc:'"科学探索奖"特别关注女性科学家和年轻科学家的发展，在同等条件下倾向年纪轻者和女性。2023年两个领域首次出现女性获奖人。' },
+  { sdg:5, project:'推动女性就业', numbers:['20'], units:['%+'], subtitle:'女性专利发明人年增长超20%', desc:'2020年至2022年间，腾讯女性专利发明人数量每年增长超过20%，全球专利申请量已超过百件。微信生态催生了一批优秀的女性创业者。' },
+  { sdg:6, project:'用"云"治水', numbers:['17.08','5000'], units:['亿m³','万'], subtitle:'多年平均供水量17.08亿立方米\n覆盖人口约5,000万', desc:'腾讯数字孪生携手粤海水务，推进珠三角水资源配置工程智慧水利建设。工程已于2024年1月正式通水，支撑超9万亿元生产总值，为粤港澳大湾区发展提供战略支撑。' },
+  { sdg:7, project:'使用绿色能源', numbers:['604277'], units:['MWh'], subtitle:'采购绿电604,277.1兆瓦时', desc:'2023年共采购绿电604,277.1兆瓦时，相比2022年增加79.6%，避免碳排放344,619.2吨。数据中心可再生能源设施总装机容量达52.2兆瓦，相比2022年增加166.3%。' },
+  { sdg:7, project:'建设绿色数据中心', numbers:['1200'], units:['万度'], subtitle:'数据中心年节电1,200万度', desc:'新建天津高新云数据中心分布式新能源微电网项目，数据中心每年可节电1,200万度，足够6,000户家庭使用。三个数据中心获得LEED运营铂金级认证。' },
+  { sdg:8, project:'残疾人就业', numbers:['52000'], units:['户'], subtitle:'覆盖广东省5.2万残疾人小微商家', desc:'微信支付发起"自立小店"助力行动，使残障小商家开店无障碍、经营有保障，助力残障人士个体就业。' },
+  { sdg:8, project:'助力灵活就业', numbers:['60000'], units:['家+'], subtitle:'"小修小补"新上传小店超6万家', desc:'2023年11月，微信联合腾讯地图全面升级"小修小补"引路行动2.0，更好地助力灵活就业。' },
+  { sdg:9, project:'前沿科学研究', numbers:['640.78','2318'], units:['亿','亿+'], subtitle:'2023年研发投入640.78亿元\n累计研发投入超2,318亿元', desc:'截至2023年底，在全球主要国家和地区专利申请公开总数超7.5万件，专利授权数量超过3.7万件。已对外开源超过170个自主研发项目，获得超过47万开发者关注。' },
+  { sdg:9, project:'深耕大模型服务', numbers:['600'], units:['个+'], subtitle:'腾讯混元落地600多个内部业务和场景', desc:'截至2023年底，腾讯云基础设施覆盖全球五大洲26个地区、70个可用区。截至2024年5月，腾讯混元已在600多个内部业务和场景中落地。' },
+  { sdg:10, project:'打造平等包容的产品', numbers:['80','8500','26000'], units:['项+','万','万'], subtitle:'无障碍专利超80项\n惠及8,500万残障人士和2.6亿老年人', desc:'腾讯2007年开始投身无障碍工作。截至2023年底累计申请超过80项无障碍相关专利，涉及40余项产品与功能。' },
+  { sdg:11, project:'助力公共服务', numbers:['1000'], units:['万+'], subtitle:'"城市美颜项目"查扣资金超1,000万元', desc:'助力第五次全国经济普查，为全国210万普查指导员和普查员提供服务。上线"湾事通"小程序。开展"城市美颜项目"，2023年协助警方打击违法团伙45个。' },
+  { sdg:12, project:'信息安全与知识产权保护', numbers:['52000'], units:['个+'], subtitle:'超5.2万个微信账号因售假被处置', desc:'搭建全方位网络安全防护体系，加强用户隐私保护。品牌保护方面设置"微信品牌维权平台"覆盖9个场景，2023年超5.2万个微信账号因售假行为被处置。' },
+  { sdg:13, project:'碳寻计划', numbers:['13'], units:['个'], subtitle:'首期13个项目入选', desc:'联合多方伙伴发起"碳寻计划"，旨在寻找和推动下一代前沿突破性低碳技术走向规模化应用。2024年5月首期终选名单公布，13个项目将获得亿元资金和资源支持。' },
+  { sdg:13, project:'碳LIVE国际版', numbers:['300'], units:['家'], subtitle:'近300家国际企业和协会加入', desc:'发布"碳LIVE"国际版，打破低碳行业信息壁垒，推动国际低碳技术合作。上线"碳BASE"可信碳计算技术开放平台。签约我国首笔盐沼蓝碳交易项目。' },
+  { sdg:14, project:'海洋数字孪生引擎', numbers:null, units:null, subtitle:'与南方海洋实验室合作打造DTO Engine', desc:'运用数字孪生、大数据等先进技术，为天气预警、海洋环境保护和海洋经济建设提供创新方案。' },
+  { sdg:15, project:'保护生物多样性', numbers:null, units:null, subtitle:'打造"雪豹AI识别系统"，支持雪豹保护', desc:'帮助保护区筛选回收的红外摄像照片。打造特色防鸟撞项目，成为全国首家推出防鸟撞设计共享工具包的互联网企业。启动第四届Light·技术公益创造营。' },
+  { sdg:16, project:'持续完善组织体系', numbers:null, units:null, subtitle:'不断优化公司治理架构，完善ESG管治体系', desc:'严格遵守法律法规相关要求，不断优化公司治理架构，完善ESG管治体系建设，恪守商业道德和法律底线，推进可持续供应链管理。' },
+  { sdg:17, project:'构建开放共创生态', numbers:null, units:null, subtitle:'携手各方共建共享开放共创的数字生态社区', desc:'提供云计算、广告、金融科技等一系列企业服务，支持业务伙伴实现数字化转型。为创作者和用户提供互动共创平台，携手公益平台、爱心企业、公益机构等共同推动公益生态百花齐放。' },
+];
+
+// Weight
+DATA.forEach((d, i) => {
+  d._i = i;
+  let s = 1;
+  if (d.numbers && d.numbers.length > 0) {
+    s += 4 * d.numbers.length;
+    d.numbers.forEach(n => {
+      const v = parseFloat(n.replace(/,/g, ''));
+      if (v >= 100000) s += 12; else if (v >= 10000) s += 8;
+      else if (v >= 1000) s += 5; else if (v >= 100) s += 3; else s += 1;
+    });
+  }
+  if (d.subtitle) s += 1;
+  if (d.desc) s += Math.min(3, Math.floor(d.desc.length / 50));
+  d.baseWeight = Math.pow(Math.max(1, s), 1.6);
+  d.weight = d.baseWeight;
+  d.targetWeight = d.baseWeight;
+  d.smoothWeight = d.baseWeight;
+  d._hover = 0;      // 0–1 hover intensity
+  d._smoothHover = 0; // smoothed hover for rendering
+});
+
+function formatNumber(n) {
+  const num = parseFloat(n);
+  if (isNaN(num)) return n;
+  if (Number.isInteger(num) && num >= 1000) return num.toLocaleString('en-US');
+  return n;
+}
+
+DATA.forEach(d => TMC.precompute(d));
+
+// Parse HSL values from the CSS custom properties after DOM is ready
+function parseSDGColors() {
+  // HSL approximations of official SDG pastel tile backgrounds
+  const hslData = {
+    1:[48,97,90], 2:[30,95,88], 3:[330,55,88], 4:[80,82,88],
+    5:[160,72,88], 6:[8,90,90], 7:[260,72,88], 8:[200,80,89],
+    9:[220,82,88], 10:[255,50,88], 11:[300,72,88], 12:[5,92,90],
+    13:[30,94,89], 14:[80,82,90], 15:[258,60,88], 16:[330,58,88],
+    17:[345,85,82]
+  };
+  for (let i = 1; i <= 17; i++) SDG_HSL[i] = hslData[i];
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SQUARIFY + FROZEN ROW TREEMAP
+   ═══════════════════════════════════════════════════════════ */
+
+function worstRatio(strip, totalArea, side) {
+  const len = totalArea / side;
+  let worst = 0;
+  for (let i = 0; i < strip.length; i++) {
+    const il = strip[i].area / len;
+    const r = Math.max(len / il, il / len);
+    if (r > worst) worst = r;
+  }
+  return worst;
+}
+
+// Frozen row TREE structure (recursive, not flat)
+// Each node: { indices: number[], isH: boolean, rest: node|null, stripFrac: number }
+let frozenTree = null;
+
+function freezeRows(items, rect) {
+  const totalW = items.reduce((s, d) => s + d.baseWeight, 0);
+  const sorted = items.map(d => ({
+    _i: d._i, area: (d.baseWeight / totalW) * rect.w * rect.h, baseWeight: d.baseWeight
+  })).sort((a, b) => b.area - a.area);
+  frozenTree = _buildTree(sorted, { ...rect });
+}
+
+function _buildTree(items, rect) {
+  if (!items.length) return null;
+  if (items.length === 1) {
+    return { indices: [items[0]._i], isH: rect.w >= rect.h, rest: null, stripFrac: 1 };
+  }
+  const isH = rect.w >= rect.h;
+  const side = isH ? rect.h : rect.w;
+  let strip = [], stripArea = 0, best = Infinity;
+  for (let i = 0; i < items.length; i++) {
+    const testStrip = [...strip, items[i]];
+    const testArea = stripArea + items[i].area;
+    const r = worstRatio(testStrip, testArea, side);
+    if (r <= best) { strip = testStrip; stripArea = testArea; best = r; }
+    else break;
+  }
+  const totalArea = items.reduce((s, d) => s + d.area, 0);
+  const frac = stripArea / totalArea;
+  const rest = items.slice(strip.length);
+  let restNode = null;
+  if (rest.length) {
+    const sz = (isH ? rect.w : rect.h) * frac;
+    const nr = isH
+      ? { x: rect.x + sz, y: rect.y, w: rect.w - sz, h: rect.h }
+      : { x: rect.x, y: rect.y + sz, w: rect.w, h: rect.h - sz };
+    restNode = _buildTree(rest, nr);
+  }
+  return { indices: strip.map(s => s._i), isH, rest: restNode, stripFrac: frac };
+}
+
+const GAP = 2;
+
+function computeFrozenLayout(rect) {
+  if (!frozenTree) return;
+  _layoutTree(frozenTree, rect);
+}
+
+function _layoutTree(node, rect) {
+  if (!node) return;
+
+  // Calculate current strip weight and rest weight
+  let stripW = 0;
+  node.indices.forEach(idx => stripW += DATA[idx].smoothWeight);
+  let restW = 0;
+  if (node.rest) _sumTreeWeight(node.rest, w => restW += w);
+  const totalW = stripW + restW;
+  if (totalW === 0) return;
+
+  const isH = node.isH;
+  const stripFrac = stripW / totalW;
+
+  // Strip region
+  const stripSz = (isH ? rect.w : rect.h) * stripFrac;
+  const sX = rect.x, sY = rect.y;
+  const sW = isH ? stripSz : rect.w;
+  const sH = isH ? rect.h : stripSz;
+
+  // Lay out tiles within the strip
+  let off = 0;
+  node.indices.forEach(idx => {
+    const tf = DATA[idx].smoothWeight / stripW;
+    const ext = (isH ? sH : sW) * tf;
+    const tx = (isH ? sX : sX + off) + GAP / 2;
+    const ty = (isH ? sY + off : sY) + GAP / 2;
+    const tw = Math.max(0, (isH ? sW : ext) - GAP);
+    const th = Math.max(0, (isH ? ext : sH) - GAP);
+    targetLayout[idx] = { x: tx, y: ty, w: tw, h: th };
+    off += ext;
+  });
+
+  // Rest region — recurse
+  if (node.rest) {
+    const restRect = isH
+      ? { x: rect.x + stripSz, y: rect.y, w: rect.w - stripSz, h: rect.h }
+      : { x: rect.x, y: rect.y + stripSz, w: rect.w, h: rect.h - stripSz };
+    _layoutTree(node.rest, restRect);
+  }
+}
+
+function _sumTreeWeight(node, cb) {
+  if (!node) return;
+  node.indices.forEach(idx => cb(DATA[idx].smoothWeight));
+  if (node.rest) _sumTreeWeight(node.rest, cb);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PREFACE OVERLAY — hover title to show
+   ═══════════════════════════════════════════════════════════ */
+const titleText = document.getElementById('titleText');
+const prefaceOverlay = document.getElementById('prefaceOverlay');
+
+titleText.addEventListener('mouseenter', () => {
+  prefaceOverlay.classList.add('show');
+});
+titleText.addEventListener('mouseleave', () => {
+  prefaceOverlay.classList.remove('show');
+});
+
+/* ═══════════════════════════════════════════════════════════
+   SDG NAV
+   ═══════════════════════════════════════════════════════════ */
+const sdgNavEl = document.getElementById('sdgNav');
+
+for (let i = 1; i <= 17; i++) {
+  if (i > 1) {
+    const sep = document.createElement('div');
+    sep.className = 'sdg-nav-sep';
+    sdgNavEl.appendChild(sep);
+  }
+  const item = document.createElement('div');
+  item.className = 'sdg-nav-item';
+  item.dataset.sdg = i;
+  const num = String(i).padStart(2, '0');
+  item.innerHTML = `<span class="sdg-num-text">${num}</span>`;
+  item.style.setProperty('--sdg-color', SDG_COLORS[i]);
+  item.addEventListener('mouseenter', () => highlightSDG(i));
+  item.addEventListener('mouseleave', () => clearHL());
+  sdgNavEl.appendChild(item);
+}
+
+function highlightSDG(sdg) {
+  tileEls.forEach(el => {
+    const s = +el.dataset.sdg;
+    el.classList.toggle('highlighted', s === sdg);
+    el.classList.toggle('dimmed', s !== sdg);
+  });
+}
+function clearHL() { tileEls.forEach(el => el.classList.remove('highlighted','dimmed')); }
+
+/* ═══════════════════════════════════════════════════════════
+   RENDER — translate-based positioning, normal width/height
+   ═══════════════════════════════════════════════════════════ */
+const treemapEl = document.getElementById('treemap');
+let tileEls = [];
+let refs = [];      // cached child element references
+let currentLayout = [];
+let targetLayout = [];
+let prevVis = [];   // previous visibility state per tile
+
+// Cursor
+let cx = -1, cy = -1, cursorIn = false;
+
+// Animation tuning
+const LERP = 0.13;
+const W_LERP = 0.09;
+const CURSOR_R = 350;
+const MAX_BOOST = 3.5;
+const MIN_SHRINK = 0.65;
+const HOVER_LERP = 0.12;
+
+function createTiles() {
+  treemapEl.innerHTML = '';
+  tileEls = []; refs = [];
+  currentLayout = []; targetLayout = []; prevVis = [];
+
+  DATA.forEach((d, i) => {
+    const el = document.createElement('div');
+    el.className = `tile sdg-${d.sdg}`;
+    el.dataset.sdg = d.sdg;
+    el.dataset.index = i;
+
+    const hasNum = d.numbers && d.numbers.length > 0;
+    let numHTML = '';
+    if (hasNum) {
+      numHTML = '<div class="number-block">';
+      d.numbers.forEach((n, ni) => {
+        numHTML += `<div class="number-row"><span class="number-val">${formatNumber(n)}</span>`;
+        if (d.units && d.units[ni]) numHTML += `<span class="number-unit">${d.units[ni]}</span>`;
+        numHTML += '</div>';
+      });
+      numHTML += '</div>';
+    }
+    const defSubHTML = (!hasNum && d.subtitle) ? `<div class="default-subtitle">${d.subtitle}</div>` : '';
+    const subHTML = d.subtitle ? `<div class="subtitle-text">${d.subtitle.replace(/\n/g,'<br>')}</div>` : '';
+    const descHTML = d.desc ? `<div class="desc-text">${d.desc}</div>` : '';
+
+    const sdgNum = String(d.sdg).padStart(2, '0');
+    const spacerHTML = hasNum ? '<div class="spacer"></div>' : '';
+    el.innerHTML = `<div class="tile-inner">
+      <span class="sdg-badge">${sdgNum}. ${SDG_NAMES[d.sdg]}</span>
+      <div class="project-name">${d.project}</div>
+      ${spacerHTML}
+      ${numHTML}${defSubHTML}${subHTML}${descHTML}
+    </div>`;
+
+    treemapEl.appendChild(el);
+    tileEls.push(el);
+    currentLayout.push({ x: 0, y: 0, w: 0, h: 0 });
+    targetLayout.push({ x: 0, y: 0, w: 0, h: 0 });
+    prevVis.push(null);
+
+    refs.push({
+      name: el.querySelector('.project-name'),
+      badge: el.querySelector('.sdg-badge'),
+      numBlock: el.querySelector('.number-block'),
+      numVals: [...el.querySelectorAll('.number-val')],
+      numUnits: [...el.querySelectorAll('.number-unit')],
+      sub: el.querySelector('.subtitle-text'),
+      desc: el.querySelector('.desc-text'),
+      defSub: el.querySelector('.default-subtitle'),
+    });
+
+    // Stagger entrance
+    setTimeout(() => {
+      el.classList.add('visible');
+      // After entrance animation, switch to JS-controlled mode
+      setTimeout(() => el.classList.add('live'), 700);
+    }, 60 + i * 30);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CONTENT VISIBILITY — pure math from pre-measured text
+   ═══════════════════════════════════════════════════════════ */
+function getVis(idx, w, h) {
+  const d = DATA[idx];
+  const tm = d._tm;
+
+  // Padding tiers based on min dimension
+  const mn = Math.min(w, h);
+  const pad = mn > 200 ? 14 : mn > 100 ? 11 : mn > 60 ? 8 : 6;
+  const aw = w - pad * 2;  // available width
+  const ah = h - pad * 2;  // available height
+
+  if (aw < 10 || ah < 10) {
+    return { nfs:8, nvfs:13, nufs:6.5, badgeFs:6.5, subFs:7, descFs:7, pad,
+             showName:false, showNum:false, subOpacity:0, descOpacity:0, defSubOpacity:0 };
+  }
+
+  // 1. Badge: find largest size that fits width
+  const badgeSizes = [9.5,9,8.5,8,7.5,7,6.5];
+  let badgeFs = 6.5;
+  for (const s of badgeSizes) {
+    if (tm['b'+s] && tm['b'+s].w <= aw) { badgeFs = s; break; }
+  }
+  const badgeH = badgeFs * 1.35 + 3; // height + margin
+
+  // 2. Project name: find largest size that fits
+  const nameSizes = [16,14.5,13,11,10,9,8];
+  let nfs = 8;
+  for (const s of nameSizes) {
+    if (tm['n'+s] && tm['n'+s].w <= aw * 2.2) { nfs = s; break; }
+    // allow up to ~2.2x width (wrapping 2 lines)
+  }
+  const nameLines = tm['n'+nfs] ? Math.ceil(tm['n'+nfs].w / aw) : 1;
+  const nameH = nfs * 1.35 * Math.min(nameLines, 3);
+
+  let usedH = badgeH + nameH;
+  let remainH = ah - usedH;
+
+  const showName = ah > badgeH + nfs * 1.2;
+
+  // 3. Numbers
+  const numSizes = [52,40,30,22,18,15,13];
+  const unitSizes = [15,13,11,9,8,7,6.5];
+  let nvfs = 13, nufs = 6.5;
+  let numH = 0;
+  const hasNum = d.numbers && d.numbers.length > 0;
+  let showNum = false;
+
+  if (hasNum && remainH > 20) {
+    // Find largest number font that fits
+    for (let si = 0; si < numSizes.length; si++) {
+      const s = numSizes[si];
+      let fits = true;
+      let totalNumH = 0;
+      for (let ni = 0; ni < d.numbers.length; ni++) {
+        const key = 'v' + ni + '_' + s;
+        if (tm[key] && tm[key].w <= aw * 0.85) {
+          totalNumH += s * 1.1;
+        } else { fits = false; break; }
+      }
+      if (fits && totalNumH <= remainH * 0.7) {
+        nvfs = s; nufs = unitSizes[si]; numH = totalNumH; showNum = true; break;
+      }
+    }
+    if (showNum) { usedH += numH; remainH = ah - usedH; }
+  }
+
+  // 4. Subtitle
+  const subSizes = [11,10.5,10,9,8.5,8,7];
+  let subFs = 7, subOpacity = 0;
+  if (d.subtitle && remainH > 18) {
+    for (const s of subSizes) {
+      if (tm['s'+s] && tm['s'+s].w <= aw * 2.5) {
+        subFs = s;
+        const subLineH = s * 1.55;
+        if (remainH > subLineH + 6) { subOpacity = remainH > 60 ? 0.55 : 0.35; }
+        break;
+      }
+    }
+    if (subOpacity > 0) { usedH += subFs * 1.55 + 6; remainH = ah - usedH; }
+  }
+
+  // 5. Description
+  const descSizes = [10.5,10,9.5,8.5,8,7.5,7];
+  let descFs = 7, descOpacity = 0;
+  if (d.desc && remainH > 20 && subOpacity > 0) {
+    for (const s of descSizes) {
+      if (tm['d'+s] && tm['d'+s].w <= aw * 2) {
+        descFs = s;
+        descOpacity = remainH > 50 ? 0.4 : remainH > 30 ? 0.25 : 0;
+        break;
+      }
+    }
+  }
+
+  // 6. Default subtitle (for tiles without numbers) — mutually exclusive with subtitle
+  const defSubOpacity = (subOpacity === 0 && !hasNum && d.subtitle && remainH > 20) ? 0.4 : 0;
+
+  return { nfs, nvfs, nufs, badgeFs, subFs, descFs, pad,
+           showName, showNum, subOpacity, descOpacity, defSubOpacity };
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CURSOR INTERACTION — Gaussian + color/shadow
+   ═══════════════════════════════════════════════════════════ */
+function updateWeights() {
+  if (!cursorIn || cx < 0) {
+    DATA.forEach(d => { d.targetWeight = d.baseWeight; d._hover = 0; });
+    return;
+  }
+  for (let i = 0; i < DATA.length; i++) {
+    const l = currentLayout[i];
+    const dx = cx - (l.x + l.w / 2);
+    const dy = cy - (l.y + l.h / 2);
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    const nd = dist / CURSOR_R;
+    const inf = Math.exp(-nd * nd * 2.5);
+    DATA[i].targetWeight = DATA[i].baseWeight * (MIN_SHRINK + (MAX_BOOST - MIN_SHRINK) * inf);
+    DATA[i]._hover = inf;
+  }
+}
+
+function smoothWeights() {
+  let mx = 0;
+  for (let i = 0; i < DATA.length; i++) {
+    const d = DATA[i];
+    const dw = d.targetWeight - d.smoothWeight;
+    d.smoothWeight += dw * W_LERP;
+    if (Math.abs(dw) > mx) mx = Math.abs(dw);
+    // Smooth hover
+    const dh = d._hover - d._smoothHover;
+    d._smoothHover += dh * HOVER_LERP;
+  }
+  return mx;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LAYOUT
+   ═══════════════════════════════════════════════════════════ */
+function computeLayout() {
+  const W = treemapEl.clientWidth;
+  const H = treemapEl.clientHeight;
+  if (W === 0 || H === 0) return;
+  computeFrozenLayout({ x: 0, y: 0, w: W, h: H });
+}
+
+function interpolateLayout() {
+  let mx = 0;
+  for (let i = 0; i < currentLayout.length; i++) {
+    const c = currentLayout[i], t = targetLayout[i];
+    c.x += (t.x - c.x) * LERP;
+    c.y += (t.y - c.y) * LERP;
+    c.w += (t.w - c.w) * LERP;
+    c.h += (t.h - c.h) * LERP;
+    const d = Math.max(Math.abs(t.x-c.x), Math.abs(t.y-c.y), Math.abs(t.w-c.w), Math.abs(t.h-c.h));
+    if (d > mx) mx = d;
+  }
+  return mx;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   APPLY LAYOUT — translate for position, width/height for size
+   ═══════════════════════════════════════════════════════════ */
+function applyLayout() {
+  for (let i = 0; i < tileEls.length; i++) {
+    const el = tileEls[i];
+    const l = currentLayout[i];
+    const r = refs[i];
+    const d = DATA[i];
+    const w = l.w, h = l.h;
+    const hv = d._smoothHover;
+
+    // Position via transform, size via w/h
+    el.style.transform = `translate(${l.x}px, ${l.y}px)`;
+    el.style.width = w + 'px';
+    el.style.height = h + 'px';
+
+    // Hover: color interpolation + shadow + glow
+    if (hv > 0.02) {
+      const hsl = SDG_HSL[d.sdg];
+      const lB = hv * 5;
+      const sB = hv * 10;
+      el.style.background = `hsl(${hsl[0]}, ${hsl[1] + sB}%, ${hsl[2] + lB}%)`;
+      // Elevated shadow
+      const shadowY = hv * 8;
+      const shadowBlur = hv * 20;
+      const shadowAlpha = hv * 0.15;
+      el.style.boxShadow = `0 ${shadowY}px ${shadowBlur}px rgba(0,0,0,${shadowAlpha})`;
+      el.style.zIndex = Math.round(hv * 10) + '';
+    } else {
+      el.style.background = '';
+      el.style.boxShadow = '';
+      el.style.zIndex = '';
+    }
+
+    // Content visibility — continuous adaptation
+    const vis = getVis(i, w, h);
+    const pv = prevVis[i];
+    const changed = !pv ||
+      pv.nfs !== vis.nfs || pv.showName !== vis.showName ||
+      pv.showNum !== vis.showNum || pv.subOpacity !== vis.subOpacity ||
+      pv.descOpacity !== vis.descOpacity || pv.defSubOpacity !== vis.defSubOpacity;
+
+    if (changed) {
+      prevVis[i] = { ...vis };
+
+      // Padding
+      const inner = el.querySelector('.tile-inner');
+      if (inner) inner.style.padding = vis.pad + 'px';
+
+      if (r.badge) {
+        r.badge.style.fontSize = vis.badgeFs + 'px';
+        r.badge.style.opacity = '0.4';
+        r.badge.style.display = vis.showName ? '' : 'none';
+      }
+      if (r.name) {
+        r.name.style.fontSize = vis.nfs + 'px';
+        r.name.style.display = vis.showName ? '' : 'none';
+      }
+      if (r.numBlock) {
+        r.numBlock.style.display = vis.showNum ? '' : 'none';
+        if (vis.showNum) {
+          r.numVals.forEach(v => v.style.fontSize = vis.nvfs + 'px');
+          r.numUnits.forEach(u => u.style.fontSize = vis.nufs + 'px');
+        }
+      }
+      if (r.sub) {
+        r.sub.style.fontSize = vis.subFs + 'px';
+        r.sub.style.opacity = vis.subOpacity + '';
+        r.sub.style.clipPath = vis.subOpacity > 0 ? 'inset(0 0 0 0)' : 'inset(0 0 100% 0)';
+      }
+      if (r.desc) {
+        r.desc.style.fontSize = vis.descFs + 'px';
+        r.desc.style.opacity = vis.descOpacity + '';
+        r.desc.style.clipPath = vis.descOpacity > 0 ? 'inset(0 0 0 0)' : 'inset(0 0 100% 0)';
+      }
+      if (r.defSub) {
+        r.defSub.style.fontSize = vis.subFs + 'px';
+        r.defSub.style.opacity = vis.defSubOpacity + '';
+        r.defSub.style.display = vis.defSubOpacity > 0 ? '' : 'none';
+      }
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ANIMATION LOOP
+   ═══════════════════════════════════════════════════════════ */
+let animating = false;
+
+function tick() {
+  const wd = smoothWeights();
+  computeLayout();
+  const pd = interpolateLayout();
+  applyLayout();
+  if (wd > 0.01 || pd > 0.3) { animating = true; requestAnimationFrame(tick); }
+  else animating = false;
+}
+
+function startAnim() { if (!animating) { animating = true; requestAnimationFrame(tick); } }
+
+/* ═══════════════════════════════════════════════════════════
+   MOUSE EVENTS
+   ═══════════════════════════════════════════════════════════ */
+treemapEl.addEventListener('mousemove', e => {
+  const b = treemapEl.getBoundingClientRect();
+  cx = e.clientX - b.left; cy = e.clientY - b.top;
+  cursorIn = true; updateWeights(); startAnim();
+});
+treemapEl.addEventListener('mouseleave', () => {
+  cursorIn = false; cx = cy = -1; updateWeights(); startAnim();
+});
+
+/* ═══════════════════════════════════════════════════════════
+   TOUCH EVENTS
+   ═══════════════════════════════════════════════════════════ */
+let touchActive = false, longPressT = null, touchExploring = false;
+let touchStartX = 0, touchStartY = 0;
+
+treemapEl.addEventListener('touchstart', e => {
+  e.preventDefault();
+  const t = e.touches[0], b = treemapEl.getBoundingClientRect();
+  cx = t.clientX - b.left; cy = t.clientY - b.top;
+  touchStartX = cx; touchStartY = cy;
+  cursorIn = true; touchActive = true;
+  longPressT = setTimeout(() => { touchExploring = true; }, 400);
+  updateWeights(); startAnim();
+}, { passive: false });
+
+treemapEl.addEventListener('touchmove', e => {
+  e.preventDefault();
+  if (!touchActive) return;
+  const t = e.touches[0], b = treemapEl.getBoundingClientRect();
+  const nx = t.clientX - b.left, ny = t.clientY - b.top;
+  if (!touchExploring && Math.hypot(nx - touchStartX, ny - touchStartY) > 10) {
+    clearTimeout(longPressT); touchExploring = true;
+  }
+  cx = nx; cy = ny; updateWeights(); startAnim();
+}, { passive: false });
+
+treemapEl.addEventListener('touchend', e => {
+  e.preventDefault(); clearTimeout(longPressT);
+  if (!touchExploring && touchActive) {
+    setTimeout(() => { cursorIn = false; cx = cy = -1; updateWeights(); startAnim(); }, 2000);
+  } else { cursorIn = false; cx = cy = -1; updateWeights(); startAnim(); }
+  touchActive = false; touchExploring = false;
+}, { passive: false });
+
+treemapEl.addEventListener('touchcancel', () => {
+  clearTimeout(longPressT); cursorIn = false; cx = cy = -1;
+  touchActive = false; touchExploring = false;
+  updateWeights(); startAnim();
+});
+
+/* ═══════════════════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════════════════ */
+function init() {
+  parseSDGColors();
+  createTiles();
+
+  DATA.forEach(d => { d.smoothWeight = d.baseWeight; d.targetWeight = d.baseWeight; d._smoothHover = 0; });
+
+  const W = treemapEl.clientWidth, H = treemapEl.clientHeight;
+  freezeRows(DATA, { x: 0, y: 0, w: W, h: H });
+  computeFrozenLayout({ x: 0, y: 0, w: W, h: H });
+
+  for (let i = 0; i < DATA.length; i++) currentLayout[i] = { ...targetLayout[i] };
+  applyLayout();
+}
+
+let resizeT;
+window.addEventListener('DOMContentLoaded', init);
+window.addEventListener('resize', () => {
+  clearTimeout(resizeT);
+  resizeT = setTimeout(() => {
+    DATA.forEach(d => { d.smoothWeight = d.baseWeight; d.targetWeight = d.baseWeight; d._smoothHover = 0; });
+    prevVis = new Array(DATA.length).fill(null);
+    const W = treemapEl.clientWidth, H = treemapEl.clientHeight;
+    freezeRows(DATA, { x: 0, y: 0, w: W, h: H });
+    computeFrozenLayout({ x: 0, y: 0, w: W, h: H });
+    for (let i = 0; i < DATA.length; i++) currentLayout[i] = { ...targetLayout[i] };
+    applyLayout();
+  }, 200);
+});
+
+})();
+</script>
+</body>
+</html>

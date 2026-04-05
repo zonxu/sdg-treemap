@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Tencent's Practice of UN Sustainable Development Goals (2023)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;600;700;900&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #f5f5f4;
+    --text: #1a1a1a;
+    --text-light: #666;
+    --text-muted: #999;
+    --header-h: 90px;
+    --top-offset: var(--header-h);
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    font-family: 'Inter', 'Noto Sans SC', -apple-system, 'PingFang SC', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    color: var(--text);
+  }
+
+  /* ─── Header ─── */
+  .header {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: var(--header-h);
+    background: #fff;
+    z-index: 100;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    border-bottom: 1px solid #e8e8e6;
+    cursor: default; overflow: visible;
+  }
+  .header-top {
+    display: flex; align-items: baseline;
+    padding: 0 24px; flex-shrink: 0;
+  }
+  .main-title {
+    font-size: 15px; font-weight: 700;
+    letter-spacing: -0.2px; color: var(--text);
+    white-space: nowrap;
+  }
+  .main-title .year {
+    font-weight: 400; font-size: 13px;
+    opacity: 0.35; margin-left: 6px;
+  }
+  .year-switcher {
+    display: inline-flex; align-items: center;
+    gap: 2px;
+    margin-left: 8px;
+    flex-shrink: 0;
+  }
+  .year-switcher .ys-item {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px; font-weight: 500;
+    color: var(--text);
+    opacity: 0.2;
+    padding: 2px 6px;
+    border-radius: 3px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.25s, background 0.25s;
+    letter-spacing: -0.2px;
+  }
+  .year-switcher .ys-item:hover { opacity: 0.5; background: rgba(0,0,0,0.04); }
+  .year-switcher .ys-item.active {
+    opacity: 0.45; font-weight: 700;
+    cursor: default;
+  }
+  .year-switcher .ys-item.active:hover { background: none; }
+
+  .lang-switcher {
+    position: fixed;
+    top: 16px; right: 24px;
+    z-index: 101;
+    display: flex; align-items: center; gap: 2px;
+  }
+  .lang-switcher .ls-item {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px; font-weight: 500;
+    color: var(--text);
+    opacity: 0.2;
+    padding: 3px 8px;
+    border-radius: 3px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.25s, background 0.25s;
+  }
+  .lang-switcher .ls-item:hover { opacity: 0.5; background: rgba(0,0,0,0.04); }
+  .lang-switcher .ls-item.active {
+    opacity: 0.5; font-weight: 700;
+    cursor: default;
+  }
+  .lang-switcher .ls-item.active:hover { background: none; }
+  .lang-switcher .ls-sep {
+    font-size: 10px; color: var(--text); opacity: 0.12;
+  }
+
+  /* ─── Preface Overlay ─── */
+  .preface-overlay {
+    position: fixed;
+    top: var(--header-h);
+    left: 0; right: 0; bottom: 0;
+    z-index: 90;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.45s cubic-bezier(0.4,0,0.2,1);
+  }
+  .preface-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .preface-overlay .preface-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(255,255,255,0.82);
+    backdrop-filter: blur(24px) saturate(1.2);
+    -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  }
+  .preface-overlay .preface-content {
+    position: relative; z-index: 1;
+    max-width: 520px; margin: 0 auto;
+    padding: 0 32px; height: 100%;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    transform: translateY(-12px);
+    transition: transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.4s ease;
+    opacity: 0;
+  }
+  .preface-overlay.show .preface-content {
+    transform: translateY(0); opacity: 1;
+  }
+  .preface-overlay .preface-content p {
+    font-size: 13.5px; font-weight: 400;
+    line-height: 2.1; color: var(--text-light);
+    letter-spacing: 0.2px; text-align: justify;
+  }
+  .preface-overlay .preface-content p + p { margin-top: 20px; }
+  .preface-overlay .preface-content p:last-child {
+    font-weight: 500; color: var(--text); opacity: 0.65;
+  }
+
+
+  /* ─── SDG Nav ─── */
+  .sdg-nav {
+    display: flex; align-items: flex-end;
+    padding: 0 24px; height: 40px; flex-shrink: 0;
+    padding-bottom: 8px;
+    gap: 0; overflow: hidden;
+  }
+  .sdg-nav-item {
+    flex-shrink: 0;
+    display: flex; align-items: flex-end;
+    justify-content: center;
+    cursor: default;
+    user-select: none;
+    transition: opacity 0.2s ease;
+  }
+  .sdg-nav-item:hover { opacity: 1; }
+  .sdg-nav-item .sdg-num-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px; font-weight: 600;
+    color: var(--text);
+    opacity: 0.35;
+    letter-spacing: -0.3px;
+    transition: opacity 0.2s;
+    padding: 0 10px;
+  }
+  .sdg-nav-item:first-child .sdg-num-text { padding-left: 0; }
+  .sdg-nav-item:hover .sdg-num-text { opacity: 1; color: var(--sdg-color); }
+  .sdg-nav-sep {
+    flex-shrink: 0;
+    width: 1px;
+    height: 28px;
+    background: var(--text);
+    opacity: 0.1;
+    user-select: none;
+    align-self: flex-end;
+  }
+
+  /* ─── Treemap ─── */
+  .treemap {
+    position: fixed;
+    top: var(--top-offset);
+    left: 0; right: 0; bottom: 0;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  /* ─── Tile ─── */
+  .tile {
+    position: absolute;
+    overflow: hidden;
+    cursor: default;
+    will-change: transform, opacity;
+    transform-origin: 0 0;
+    contain: layout style paint;
+    backface-visibility: hidden;
+  }
+
+  .tile-inner {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    padding: 14px 16px;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* SDG filter states */
+  .tile.dimmed { filter: grayscale(0.6) brightness(0.88); opacity: 0.35; }
+  .tile.highlighted { filter: brightness(1.03) saturate(1.3); }
+
+  /* ─── Tile content ─── */
+  .tile .sdg-badge {
+    font-size: 9px; font-weight: 500;
+    opacity: 0.4; letter-spacing: 0.2px;
+    margin-bottom: 3px; flex-shrink: 0;
+    white-space: nowrap; overflow: hidden;
+    text-overflow: ellipsis;
+    transition: opacity 0.35s ease;
+  }
+
+  .tile .project-name {
+    font-size: 13px; font-weight: 700;
+    line-height: 1.35; letter-spacing: -0.2px;
+    flex-shrink: 0; z-index: 1;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .tile .spacer { flex: 1; min-height: 2px; }
+
+  .tile .number-block {
+    flex-shrink: 0; z-index: 1; overflow: hidden;
+  }
+  .tile .number-row {
+    display: flex; align-items: baseline; gap: 3px;
+  }
+  .tile .number-val {
+    font-family: 'Inter', 'Noto Sans SC', sans-serif;
+    font-weight: 900; line-height: 1;
+    letter-spacing: -1.5px;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.82;
+  }
+  .tile .number-unit {
+    font-size: 12px; font-weight: 500;
+    opacity: 0.45; letter-spacing: 0;
+  }
+
+  .tile .subtitle-text {
+    font-size: 11px; font-weight: 500;
+    line-height: 1.55; opacity: 0;
+    margin-top: 6px; flex-shrink: 0; overflow: hidden;
+    transition: opacity 0.35s ease;
+    clip-path: inset(0 0 100% 0);
+    transition: opacity 0.35s ease, clip-path 0.35s ease;
+  }
+
+  .tile .desc-text {
+    font-size: 10.5px; font-weight: 400;
+    line-height: 1.7; opacity: 0;
+    margin-top: 4px; flex-shrink: 1; overflow: hidden;
+    clip-path: inset(0 0 100% 0);
+    transition: opacity 0.35s ease, clip-path 0.35s ease;
+  }
+
+  .tile .default-subtitle {
+    font-size: 11px; font-weight: 400;
+    line-height: 1.6; opacity: 0.45;
+    flex-shrink: 0; overflow: hidden;
+    margin-top: auto;
+  }
+
+  /* ─── 17 SDG Official Colors (pastel tint for bg, dark for text) ─── */
+  .sdg-1  { --tile-bg: #fef3cd; --tile-text: #6b5a00; }
+  .sdg-2  { --tile-bg: #fde0c5; --tile-text: #7a3d00; }
+  .sdg-3  { --tile-bg: #f2d1e4; --tile-text: #6e1e4a; }
+  .sdg-4  { --tile-bg: #e8f5cc; --tile-text: #4a6b00; }
+  .sdg-5  { --tile-bg: #c8f5e8; --tile-text: #0a5c42; }
+  .sdg-6  { --tile-bg: #fdd8d2; --tile-text: #7a2216; }
+  .sdg-7  { --tile-bg: #d8d2f5; --tile-text: #2e1a6e; }
+  .sdg-8  { --tile-bg: #cee8f8; --tile-text: #0e4a72; }
+  .sdg-9  { --tile-bg: #c8d4f8; --tile-text: #142a6e; }
+  .sdg-10 { --tile-bg: #d8d0f2; --tile-text: #36286a; }
+  .sdg-11 { --tile-bg: #eecef5; --tile-text: #5c1470; }
+  .sdg-12 { --tile-bg: #fdd4cc; --tile-text: #7a2010; }
+  .sdg-13 { --tile-bg: #fde0c8; --tile-text: #7a4000; }
+  .sdg-14 { --tile-bg: #ddf5cc; --tile-text: #3a6e0a; }
+  .sdg-15 { --tile-bg: #d6cef5; --tile-text: #342870; }
+  .sdg-16 { --tile-bg: #f2cedf; --tile-text: #6e1646; }
+  .sdg-17 { --tile-bg: #e8c0c8; --tile-text: #6e0a20; }
+
+  .tile[class*="sdg-"] {
+    background: var(--tile-bg);
+    color: var(--tile-text);
+  }
+
+  /* ─── Entrance ─── */
+  .tile {
+    opacity: 0;
+    transform: translate(0,0) scale(0.92);
+  }
+  .tile.visible {
+    opacity: 1;
+    transform: translate(var(--tx, 0), var(--ty, 0));
+    transition: opacity 0.6s cubic-bezier(0.25,0.46,0.45,0.94),
+                transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+  /* After entrance, remove CSS transition so JS controls smoothly */
+  .tile.live {
+    transition: none;
+  }
+
+
+
+</style>
+</head>
+<body>
+
+<div class="lang-switcher"><a href="sdg-treemap-2023.html" class="ls-item">中</a><span class="ls-sep">/</span><span class="ls-item active">EN</span></div>
+
+<div class="header" id="header">
+  <div class="header-top">
+    <div class="main-title" id="titleText">
+      Tencent's Practice of UN SDGs
+    </div>
+    <span class="year-switcher">
+      <a href="sdg-treemap-en.html" class="ys-item">2024</a>
+      <span class="ys-item active">2023</span>
+    </span>
+  </div>
+  <div class="sdg-nav" id="sdgNav"></div>
+</div>
+
+<div class="preface-overlay" id="prefaceOverlay">
+  <div class="preface-backdrop"></div>
+  <div class="preface-content">
+    <p>As a technology company guided by the mission of "Tech for Good," Tencent has spent 25 years exploring the integration of commercial and social value. Under the strategy of Sustainable Social Value Innovation, new products and projects have been incubated to address various social issues through collaborative efforts.</p>
+    <p>Grounded in national development strategy and aligned with the UN SDGs, Tencent SSV persists in doing "what is difficult but right," developing the core methodology of "social co-creation + systematic innovation + local growth" to connect digital products with the world and make technological innovation warmer.</p>
+  </div>
+</div>
+
+<div class="treemap" id="treemap"></div>
+
+
+<script>
+(function() {
+'use strict';
+
+/* ═══════════════════════════════════════════════════════════
+   TEXT METRICS CACHE — Canvas pre-measurement
+   ═══════════════════════════════════════════════════════════ */
+const TMC = (() => {
+  const c = document.createElement('canvas').getContext('2d');
+  const m = new Map();
+  function measure(text, size, weight, family) {
+    const k = text + '|' + size + '|' + weight;
+    if (m.has(k)) return m.get(k);
+    c.font = weight + ' ' + size + 'px ' + family;
+    const r = { w: c.measureText(text).width, h: size * 1.35 };
+    m.set(k, r);
+    return r;
+  }
+  function precompute(d) {
+    const sf = "'Noto Sans SC',sans-serif";
+    const nf = "'Inter',sans-serif";
+    d._tm = {};
+    // Project name at each tier
+    [16,14.5,13,11,10,9,8].forEach(s => { d._tm['n'+s] = measure(d.project, s, '700', sf); });
+    // Numbers
+    if (d.numbers) d.numbers.forEach((n,i) => {
+      [52,40,30,22,18,15,13].forEach(s => { d._tm['v'+i+'_'+s] = measure(formatNumber(n), s, '900', nf); });
+    });
+    // Badge
+    const badgeText = String(d.sdg).padStart(2,'0') + '. ' + SDG_NAMES[d.sdg];
+    [9.5,9,8.5,8,7.5,7,6.5].forEach(s => { d._tm['b'+s] = measure(badgeText, s, '500', sf); });
+    // Subtitle (measure first line, ~30 chars)
+    if (d.subtitle) {
+      const subText = d.subtitle.replace(/\n.*/,'').substring(0,30);
+      [11,10.5,10,9,8.5,8,7].forEach(s => { d._tm['s'+s] = measure(subText, s, '500', sf); });
+    }
+    // Desc (measure first ~25 chars)
+    if (d.desc) {
+      const descText = d.desc.substring(0,25);
+      [10.5,10,9.5,8.5,8,7.5,7].forEach(s => { d._tm['d'+s] = measure(descText, s, '400', sf); });
+    }
+  }
+  return { measure, precompute };
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   DATA
+   ═══════════════════════════════════════════════════════════ */
+const SDG_NAMES = {
+  1:'No Poverty', 2:'Zero Hunger', 3:'Good Health & Well-being',
+  4:'Quality Education', 5:'Gender Equality', 6:'Clean Water & Sanitation',
+  7:'Affordable Clean Energy', 8:'Decent Work & Economic Growth', 9:'Industry, Innovation & Infrastructure',
+  10:'Reduced Inequalities', 11:'Sustainable Cities & Communities',
+  12:'Responsible Consumption & Production', 13:'Climate Action',
+  14:'Life Below Water', 15:'Life on Land',
+  16:'Peace, Justice & Strong Institutions', 17:'Partnerships for the Goals'
+};
+// Official SDG colors (vibrant) for nav hover and hover interpolation
+const SDG_COLORS = {
+  1:'#E5CD00', 2:'#E5920D', 3:'#D4628B', 4:'#BED32E', 5:'#4CC9A2',
+  6:'#E26B56', 7:'#7B52C2', 8:'#5CB8E6', 9:'#3B6DC6', 10:'#8B78C6',
+  11:'#C946C9', 12:'#E25040', 13:'#E8943A', 14:'#BFEA50', 15:'#9B82D6',
+  16:'#D66A9E', 17:'#A51040'
+};
+
+// HSL for hover color interpolation
+const SDG_HSL = {};
+for (let i = 1; i <= 17; i++) {
+  // will be parsed from CSS custom properties
+  SDG_HSL[i] = null;
+}
+
+const DATA = [
+  { sdg:1, project:'Rural Revitalization Fund', numbers:['1.78'], units:['¥100M'], subtitle:'Cumulative fundraising of RMB 178 million', desc:'Guiding social forces to participate in rural revitalization and promote shared prosperity. By end of 2023, supported grassroots organizations in 151 underdeveloped counties, implemented 200+ charity projects, mobilizing 2.67M+ donations. Recognized as a global best poverty reduction case by the World Bank and UN FAO in 2023.' },
+  { sdg:1, project:'Pioneer Revitalization Plan', numbers:['77862'], units:['trainees'], subtitle:'77,862 trainees in offline programs', desc:'Trained rural governance leaders and new agricultural business leaders. By May 2024, 829 offline sessions completed. "Village Service Platform" covers 61,700 villages across 31 provinces, serving 12.52M+ villagers. Won the 12th China Charity Award from the Ministry of Civil Affairs in 2023.' },
+  { sdg:1, project:'Shared Prosperity Villages', numbers:['125'], units:['counties'], subtitle:'Systematic solution expanded to 125 counties', desc:'Developed an endogenous systematic solution combining "mechanism + talent + digitalization." By December 2023, promoted by local governments to 125 counties across Chongqing, Yunnan, Guangxi, Zhejiang, and Guangdong.' },
+  { sdg:2, project:'National Crop Germplasm Bank 2.0', numbers:['2000'], units:['10K ¥'], subtitle:'Donated RMB 20 million', desc:'Partnered with the Chinese Academy of Agricultural Sciences to strengthen germplasm resource protection and utilization, exploring digital technology to drive seed industry development.' },
+  { sdg:2, project:'Kashgar Facility Agriculture', numbers:['3700'], units:['10K ¥'], subtitle:'RMB 37 million in philanthropic investment', desc:'Jointly launched a digital agriculture pilot project in Kashgar with the local government and Shenzhen Aid-Xinjiang. From July to end of 2023, smart greenhouse upgrades generated over RMB 300K income for farmers.' },
+  { sdg:3, project:'Social Emergency Rescue', numbers:['140'], units:['cases+'], subtitle:'Volunteers participated in 140+ rescue operations', desc:'Co-built a "5-minute social rescue circle" with Shenzhen Bao\'an District. By end of 2023, trained volunteers participated in 140+ rescues. QQ launched earthquake early warning, achieving dual-platform coverage with WeChat.' },
+  { sdg:3, project:'Elderly Health & Safety', numbers:['50000'], units:['seniors+'], subtitle:'Over 50,000 elderly beneficiaries', desc:'Launched "Silver Hair Co-Protection Plan" with innovative "4-level response mechanism," applied in 15 nursing homes, 250 communities, and 46 villages by December 2023. Released Tian Lai hearing aids improving speech clarity by 85% in complex environments.' },
+  { sdg:3, project:'Medical Talent Development', numbers:['1150'], units:['doctors+'], subtitle:'Trained 1,150+ rural doctors offline', desc:'Co-initiated "Public Health Talent Enhancement Project" with the National Health Commission. Over 220K participants in online disease control training. By July 2023, trained 1,150+ rural doctors offline.' },
+  { sdg:3, project:'Maternal & Child Health', numbers:['100000','100000'], units:['infants','women'], subtitle:'Screened 100K+ newborns\nCompleted cervical/breast cancer screening for 100K women', desc:'Red Umbrella Plan screened 100K+ newborns in Ningxia and Guizhou pilot areas by December 2023, raising congenital heart disease screening from 10% to near 100%. Women\'s cancer screening program completed 100K screenings by end of 2023.' },
+  { sdg:4, project:'Digital Teaching Support', numbers:['35000','2000'], units:['volunteers','schools+'], subtitle:'35,000 digital teaching volunteers\nServing 2,000+ rural schools', desc:'Deployed in 25 provinces in 2023. Volunteers delivered 100K+ class hours, driving digital transformation of education support.' },
+  { sdg:4, project:'Young Scientists Program', numbers:['1800'], units:['students+'], subtitle:'1,800+ students enrolled', desc:'A science talent development program for middle school students. From 2022 to 2023, 1,800+ students from 200+ schools across 25 provinces participated, with 102 selected and 64 research papers produced.' },
+  { sdg:4, project:'Youth Music & Tech Program', numbers:['110'], units:['schools+'], subtitle:'110+ participating schools', desc:'China\'s first music & technology interdisciplinary program for middle school students. In 2023, 390+ students from 110+ schools participated.' },
+  { sdg:5, project:'Women in Science', numbers:null, units:null, subtitle:'First female laureates in Math/Physics and Transportation/Architecture', desc:'The Xplorer Prize prioritizes women scientists and younger researchers. In 2023, two fields saw their first female laureates.' },
+  { sdg:5, project:'Women\'s Employment', numbers:['20'], units:['%+'], subtitle:'Female patent inventors grew 20%+ annually', desc:'From 2020 to 2022, Tencent\'s female patent inventors grew over 20% annually, with global patent applications exceeding 100. The WeChat ecosystem has nurtured outstanding female entrepreneurs.' },
+  { sdg:6, project:'Cloud-Powered Water Management', numbers:['17.08','5000'], units:['100M m³','10K'], subtitle:'Average annual water supply of 1.708 billion m³\nServing ~50 million people', desc:'Tencent Digital Twin partnered with Guangdong Yue Hai Water for the Pearl River Delta Water Resource Allocation Project. Officially operational since January 2024, supporting over RMB 9 trillion in GDP for the Greater Bay Area.' },
+  { sdg:7, project:'Green Energy Procurement', numbers:['604277'], units:['MWh'], subtitle:'Procured 604,277.1 MWh of green electricity', desc:'Procured 604,277.1 MWh of green electricity in 2023, a 79.6% increase over 2022, avoiding 344,619.2 tons of carbon emissions. Data center renewable energy capacity reached 52.2 MW, up 166.3% from 2022.' },
+  { sdg:7, project:'Green Data Centers', numbers:['1200'], units:['10K kWh'], subtitle:'Data centers saving 12 million kWh annually', desc:'Built Tianjin Hi-Tech Cloud Data Center distributed renewable energy microgrid. Saves 12M kWh annually, enough for 6,000 households. Three data centers received LEED Operations Platinum certification.' },
+  { sdg:8, project:'Disability Employment', numbers:['52000'], units:['merchants'], subtitle:'Covering 52,000 disabled micro-merchants in Guangdong', desc:'WeChat Pay launched "Self-Reliance Shop" initiative to help disabled micro-merchants open stores barrier-free, supporting individual employment for people with disabilities.' },
+  { sdg:8, project:'Flexible Employment Support', numbers:['60000'], units:['shops+'], subtitle:'60,000+ new repair shops listed', desc:'In November 2023, WeChat and Tencent Maps upgraded the "Small Repairs" navigation initiative 2.0 to better support flexible employment.' },
+  { sdg:9, project:'Frontier Research', numbers:['640.78','2318'], units:['¥100M','¥100M+'], subtitle:'2023 R&D spending: RMB 64.078 billion\nCumulative R&D exceeding RMB 231.8 billion', desc:'By end of 2023, over 75K patent applications filed globally, with 37K+ granted. Open-sourced 170+ self-developed projects, attracting 470K+ developers.' },
+  { sdg:9, project:'AI Model Services', numbers:['600'], units:['scenarios+'], subtitle:'Tencent Hunyuan deployed in 600+ internal scenarios', desc:'By end of 2023, Tencent Cloud infrastructure spans 26 regions and 70 availability zones across 5 continents. By May 2024, Hunyuan deployed in 600+ internal business scenarios.' },
+  { sdg:10, project:'Inclusive Products', numbers:['80','8500','26000'], units:['patents+','10K','10K'], subtitle:'80+ accessibility patents\nBenefiting 85M disabled and 260M elderly', desc:'Tencent began accessibility work in 2007. By end of 2023, filed 80+ accessibility patents covering 40+ products and features.' },
+  { sdg:11, project:'Public Service Support', numbers:['1000'], units:['10K+ ¥'], subtitle:'"City Beautification" project seized RMB 10M+ in funds', desc:'Supported the 5th National Economic Census, serving 2.1M census workers. Launched "Bay Pass" mini program. "City Beautification" project helped police crack down on 45 illegal groups in 2023.' },
+  { sdg:12, project:'Security & IP Protection', numbers:['52000'], units:['accounts+'], subtitle:'52,000+ WeChat accounts suspended for counterfeiting', desc:'Built comprehensive cybersecurity defense system and strengthened user privacy protection. Brand protection platform covers 9 scenarios; 52,000+ WeChat accounts were suspended for counterfeiting in 2023.' },
+  { sdg:13, project:'Carbon Quest Initiative', numbers:['13'], units:['projects'], subtitle:'13 projects selected in Phase 1', desc:'Co-initiated "Carbon Quest" with multiple partners to discover and scale next-generation breakthrough low-carbon technologies. Phase 1 final list announced in May 2024, with 13 projects receiving funding and resource support.' },
+  { sdg:13, project:'Carbon LIVE International', numbers:['300'], units:['orgs'], subtitle:'Nearly 300 international enterprises and associations joined', desc:'Released Carbon LIVE international edition, breaking information barriers in low-carbon industry and promoting international cooperation. Launched "Carbon BASE" trusted carbon computing platform. Signed China\'s first salt marsh blue carbon transaction.' },
+  { sdg:14, project:'Ocean Digital Twin Engine', numbers:null, units:null, subtitle:'Partnered with Southern Marine Lab to build DTO Engine', desc:'Applying digital twin and big data technologies to provide innovative solutions for weather warning, marine environmental protection, and ocean economic development.' },
+  { sdg:15, project:'Biodiversity Protection', numbers:null, units:null, subtitle:'Built "Snow Leopard AI Recognition System" for conservation', desc:'Helped nature reserves screen infrared camera photos. Created anti-bird-collision project, becoming the first internet company to release a shared anti-bird-collision design toolkit. Launched the 4th Light Tech for Good Camp.' },
+  { sdg:16, project:'Governance & Compliance', numbers:null, units:null, subtitle:'Continuously improving corporate governance and ESG framework', desc:'Strictly complying with laws and regulations, continuously optimizing corporate governance, improving ESG management system, upholding business ethics, and advancing sustainable supply chain management.' },
+  { sdg:17, project:'Open Co-Creation Ecosystem', numbers:null, units:null, subtitle:'Building an open, collaborative digital ecosystem with all partners', desc:'Providing cloud computing, advertising, fintech and other enterprise services to support partners\' digital transformation. Offering interactive co-creation platforms for creators and users, and working with charity platforms, enterprises, and NGOs to foster a thriving philanthropy ecosystem.' },
+];
+
+// Weight
+DATA.forEach((d, i) => {
+  d._i = i;
+  let s = 1;
+  if (d.numbers && d.numbers.length > 0) {
+    s += 4 * d.numbers.length;
+    d.numbers.forEach(n => {
+      const v = parseFloat(n.replace(/,/g, ''));
+      if (v >= 100000) s += 12; else if (v >= 10000) s += 8;
+      else if (v >= 1000) s += 5; else if (v >= 100) s += 3; else s += 1;
+    });
+  }
+  if (d.subtitle) s += 1;
+  if (d.desc) s += Math.min(3, Math.floor(d.desc.length / 50));
+  d.baseWeight = Math.pow(Math.max(1, s), 1.6);
+  d.weight = d.baseWeight;
+  d.targetWeight = d.baseWeight;
+  d.smoothWeight = d.baseWeight;
+  d._hover = 0;      // 0–1 hover intensity
+  d._smoothHover = 0; // smoothed hover for rendering
+});
+
+function formatNumber(n) {
+  const num = parseFloat(n);
+  if (isNaN(num)) return n;
+  if (Number.isInteger(num) && num >= 1000) return num.toLocaleString('en-US');
+  return n;
+}
+
+DATA.forEach(d => TMC.precompute(d));
+
+// Parse HSL values from the CSS custom properties after DOM is ready
+function parseSDGColors() {
+  // HSL approximations of official SDG pastel tile backgrounds
+  const hslData = {
+    1:[48,97,90], 2:[30,95,88], 3:[330,55,88], 4:[80,82,88],
+    5:[160,72,88], 6:[8,90,90], 7:[260,72,88], 8:[200,80,89],
+    9:[220,82,88], 10:[255,50,88], 11:[300,72,88], 12:[5,92,90],
+    13:[30,94,89], 14:[80,82,90], 15:[258,60,88], 16:[330,58,88],
+    17:[345,85,82]
+  };
+  for (let i = 1; i <= 17; i++) SDG_HSL[i] = hslData[i];
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SQUARIFY + FROZEN ROW TREEMAP
+   ═══════════════════════════════════════════════════════════ */
+
+function worstRatio(strip, totalArea, side) {
+  const len = totalArea / side;
+  let worst = 0;
+  for (let i = 0; i < strip.length; i++) {
+    const il = strip[i].area / len;
+    const r = Math.max(len / il, il / len);
+    if (r > worst) worst = r;
+  }
+  return worst;
+}
+
+// Frozen row TREE structure (recursive, not flat)
+// Each node: { indices: number[], isH: boolean, rest: node|null, stripFrac: number }
+let frozenTree = null;
+
+function freezeRows(items, rect) {
+  const totalW = items.reduce((s, d) => s + d.baseWeight, 0);
+  const sorted = items.map(d => ({
+    _i: d._i, area: (d.baseWeight / totalW) * rect.w * rect.h, baseWeight: d.baseWeight
+  })).sort((a, b) => b.area - a.area);
+  frozenTree = _buildTree(sorted, { ...rect });
+}
+
+function _buildTree(items, rect) {
+  if (!items.length) return null;
+  if (items.length === 1) {
+    return { indices: [items[0]._i], isH: rect.w >= rect.h, rest: null, stripFrac: 1 };
+  }
+  const isH = rect.w >= rect.h;
+  const side = isH ? rect.h : rect.w;
+  let strip = [], stripArea = 0, best = Infinity;
+  for (let i = 0; i < items.length; i++) {
+    const testStrip = [...strip, items[i]];
+    const testArea = stripArea + items[i].area;
+    const r = worstRatio(testStrip, testArea, side);
+    if (r <= best) { strip = testStrip; stripArea = testArea; best = r; }
+    else break;
+  }
+  const totalArea = items.reduce((s, d) => s + d.area, 0);
+  const frac = stripArea / totalArea;
+  const rest = items.slice(strip.length);
+  let restNode = null;
+  if (rest.length) {
+    const sz = (isH ? rect.w : rect.h) * frac;
+    const nr = isH
+      ? { x: rect.x + sz, y: rect.y, w: rect.w - sz, h: rect.h }
+      : { x: rect.x, y: rect.y + sz, w: rect.w, h: rect.h - sz };
+    restNode = _buildTree(rest, nr);
+  }
+  return { indices: strip.map(s => s._i), isH, rest: restNode, stripFrac: frac };
+}
+
+const GAP = 2;
+
+function computeFrozenLayout(rect) {
+  if (!frozenTree) return;
+  _layoutTree(frozenTree, rect);
+}
+
+function _layoutTree(node, rect) {
+  if (!node) return;
+
+  // Calculate current strip weight and rest weight
+  let stripW = 0;
+  node.indices.forEach(idx => stripW += DATA[idx].smoothWeight);
+  let restW = 0;
+  if (node.rest) _sumTreeWeight(node.rest, w => restW += w);
+  const totalW = stripW + restW;
+  if (totalW === 0) return;
+
+  const isH = node.isH;
+  const stripFrac = stripW / totalW;
+
+  // Strip region
+  const stripSz = (isH ? rect.w : rect.h) * stripFrac;
+  const sX = rect.x, sY = rect.y;
+  const sW = isH ? stripSz : rect.w;
+  const sH = isH ? rect.h : stripSz;
+
+  // Lay out tiles within the strip
+  let off = 0;
+  node.indices.forEach(idx => {
+    const tf = DATA[idx].smoothWeight / stripW;
+    const ext = (isH ? sH : sW) * tf;
+    const tx = (isH ? sX : sX + off) + GAP / 2;
+    const ty = (isH ? sY + off : sY) + GAP / 2;
+    const tw = Math.max(0, (isH ? sW : ext) - GAP);
+    const th = Math.max(0, (isH ? ext : sH) - GAP);
+    targetLayout[idx] = { x: tx, y: ty, w: tw, h: th };
+    off += ext;
+  });
+
+  // Rest region — recurse
+  if (node.rest) {
+    const restRect = isH
+      ? { x: rect.x + stripSz, y: rect.y, w: rect.w - stripSz, h: rect.h }
+      : { x: rect.x, y: rect.y + stripSz, w: rect.w, h: rect.h - stripSz };
+    _layoutTree(node.rest, restRect);
+  }
+}
+
+function _sumTreeWeight(node, cb) {
+  if (!node) return;
+  node.indices.forEach(idx => cb(DATA[idx].smoothWeight));
+  if (node.rest) _sumTreeWeight(node.rest, cb);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PREFACE OVERLAY — hover title to show
+   ═══════════════════════════════════════════════════════════ */
+const titleText = document.getElementById('titleText');
+const prefaceOverlay = document.getElementById('prefaceOverlay');
+
+titleText.addEventListener('mouseenter', () => {
+  prefaceOverlay.classList.add('show');
+});
+titleText.addEventListener('mouseleave', () => {
+  prefaceOverlay.classList.remove('show');
+});
+
+/* ═══════════════════════════════════════════════════════════
+   SDG NAV
+   ═══════════════════════════════════════════════════════════ */
+const sdgNavEl = document.getElementById('sdgNav');
+
+for (let i = 1; i <= 17; i++) {
+  if (i > 1) {
+    const sep = document.createElement('div');
+    sep.className = 'sdg-nav-sep';
+    sdgNavEl.appendChild(sep);
+  }
+  const item = document.createElement('div');
+  item.className = 'sdg-nav-item';
+  item.dataset.sdg = i;
+  const num = String(i).padStart(2, '0');
+  item.innerHTML = `<span class="sdg-num-text">${num}</span>`;
+  item.style.setProperty('--sdg-color', SDG_COLORS[i]);
+  item.addEventListener('mouseenter', () => highlightSDG(i));
+  item.addEventListener('mouseleave', () => clearHL());
+  sdgNavEl.appendChild(item);
+}
+
+function highlightSDG(sdg) {
+  tileEls.forEach(el => {
+    const s = +el.dataset.sdg;
+    el.classList.toggle('highlighted', s === sdg);
+    el.classList.toggle('dimmed', s !== sdg);
+  });
+}
+function clearHL() { tileEls.forEach(el => el.classList.remove('highlighted','dimmed')); }
+
+/* ═══════════════════════════════════════════════════════════
+   RENDER — translate-based positioning, normal width/height
+   ═══════════════════════════════════════════════════════════ */
+const treemapEl = document.getElementById('treemap');
+let tileEls = [];
+let refs = [];      // cached child element references
+let currentLayout = [];
+let targetLayout = [];
+let prevVis = [];   // previous visibility state per tile
+
+// Cursor
+let cx = -1, cy = -1, cursorIn = false;
+
+// Animation tuning
+const LERP = 0.13;
+const W_LERP = 0.09;
+const CURSOR_R = 350;
+const MAX_BOOST = 3.5;
+const MIN_SHRINK = 0.65;
+const HOVER_LERP = 0.12;
+
+function createTiles() {
+  treemapEl.innerHTML = '';
+  tileEls = []; refs = [];
+  currentLayout = []; targetLayout = []; prevVis = [];
+
+  DATA.forEach((d, i) => {
+    const el = document.createElement('div');
+    el.className = `tile sdg-${d.sdg}`;
+    el.dataset.sdg = d.sdg;
+    el.dataset.index = i;
+
+    const hasNum = d.numbers && d.numbers.length > 0;
+    let numHTML = '';
+    if (hasNum) {
+      numHTML = '<div class="number-block">';
+      d.numbers.forEach((n, ni) => {
+        numHTML += `<div class="number-row"><span class="number-val">${formatNumber(n)}</span>`;
+        if (d.units && d.units[ni]) numHTML += `<span class="number-unit">${d.units[ni]}</span>`;
+        numHTML += '</div>';
+      });
+      numHTML += '</div>';
+    }
+    const defSubHTML = (!hasNum && d.subtitle) ? `<div class="default-subtitle">${d.subtitle}</div>` : '';
+    const subHTML = d.subtitle ? `<div class="subtitle-text">${d.subtitle.replace(/\n/g,'<br>')}</div>` : '';
+    const descHTML = d.desc ? `<div class="desc-text">${d.desc}</div>` : '';
+
+    const sdgNum = String(d.sdg).padStart(2, '0');
+    const spacerHTML = hasNum ? '<div class="spacer"></div>' : '';
+    el.innerHTML = `<div class="tile-inner">
+      <span class="sdg-badge">${sdgNum}. ${SDG_NAMES[d.sdg]}</span>
+      <div class="project-name">${d.project}</div>
+      ${spacerHTML}
+      ${numHTML}${defSubHTML}${subHTML}${descHTML}
+    </div>`;
+
+    treemapEl.appendChild(el);
+    tileEls.push(el);
+    currentLayout.push({ x: 0, y: 0, w: 0, h: 0 });
+    targetLayout.push({ x: 0, y: 0, w: 0, h: 0 });
+    prevVis.push(null);
+
+    refs.push({
+      name: el.querySelector('.project-name'),
+      badge: el.querySelector('.sdg-badge'),
+      numBlock: el.querySelector('.number-block'),
+      numVals: [...el.querySelectorAll('.number-val')],
+      numUnits: [...el.querySelectorAll('.number-unit')],
+      sub: el.querySelector('.subtitle-text'),
+      desc: el.querySelector('.desc-text'),
+      defSub: el.querySelector('.default-subtitle'),
+    });
+
+    // Stagger entrance
+    setTimeout(() => {
+      el.classList.add('visible');
+      // After entrance animation, switch to JS-controlled mode
+      setTimeout(() => el.classList.add('live'), 700);
+    }, 60 + i * 30);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CONTENT VISIBILITY — pure math from pre-measured text
+   ═══════════════════════════════════════════════════════════ */
+function getVis(idx, w, h) {
+  const d = DATA[idx];
+  const tm = d._tm;
+
+  // Padding tiers based on min dimension
+  const mn = Math.min(w, h);
+  const pad = mn > 200 ? 14 : mn > 100 ? 11 : mn > 60 ? 8 : 6;
+  const aw = w - pad * 2;  // available width
+  const ah = h - pad * 2;  // available height
+
+  if (aw < 10 || ah < 10) {
+    return { nfs:8, nvfs:13, nufs:6.5, badgeFs:6.5, subFs:7, descFs:7, pad,
+             showName:false, showNum:false, subOpacity:0, descOpacity:0, defSubOpacity:0 };
+  }
+
+  // 1. Badge: find largest size that fits width
+  const badgeSizes = [9.5,9,8.5,8,7.5,7,6.5];
+  let badgeFs = 6.5;
+  for (const s of badgeSizes) {
+    if (tm['b'+s] && tm['b'+s].w <= aw) { badgeFs = s; break; }
+  }
+  const badgeH = badgeFs * 1.35 + 3; // height + margin
+
+  // 2. Project name: find largest size that fits
+  const nameSizes = [16,14.5,13,11,10,9,8];
+  let nfs = 8;
+  for (const s of nameSizes) {
+    if (tm['n'+s] && tm['n'+s].w <= aw * 2.2) { nfs = s; break; }
+    // allow up to ~2.2x width (wrapping 2 lines)
+  }
+  const nameLines = tm['n'+nfs] ? Math.ceil(tm['n'+nfs].w / aw) : 1;
+  const nameH = nfs * 1.35 * Math.min(nameLines, 3);
+
+  let usedH = badgeH + nameH;
+  let remainH = ah - usedH;
+
+  const showName = ah > badgeH + nfs * 1.2;
+
+  // 3. Numbers
+  const numSizes = [52,40,30,22,18,15,13];
+  const unitSizes = [15,13,11,9,8,7,6.5];
+  let nvfs = 13, nufs = 6.5;
+  let numH = 0;
+  const hasNum = d.numbers && d.numbers.length > 0;
+  let showNum = false;
+
+  if (hasNum && remainH > 20) {
+    // Find largest number font that fits
+    for (let si = 0; si < numSizes.length; si++) {
+      const s = numSizes[si];
+      let fits = true;
+      let totalNumH = 0;
+      for (let ni = 0; ni < d.numbers.length; ni++) {
+        const key = 'v' + ni + '_' + s;
+        if (tm[key] && tm[key].w <= aw * 0.85) {
+          totalNumH += s * 1.1;
+        } else { fits = false; break; }
+      }
+      if (fits && totalNumH <= remainH * 0.7) {
+        nvfs = s; nufs = unitSizes[si]; numH = totalNumH; showNum = true; break;
+      }
+    }
+    if (showNum) { usedH += numH; remainH = ah - usedH; }
+  }
+
+  // 4. Subtitle
+  const subSizes = [11,10.5,10,9,8.5,8,7];
+  let subFs = 7, subOpacity = 0;
+  if (d.subtitle && remainH > 18) {
+    for (const s of subSizes) {
+      if (tm['s'+s] && tm['s'+s].w <= aw * 2.5) {
+        subFs = s;
+        const subLineH = s * 1.55;
+        if (remainH > subLineH + 6) { subOpacity = remainH > 60 ? 0.55 : 0.35; }
+        break;
+      }
+    }
+    if (subOpacity > 0) { usedH += subFs * 1.55 + 6; remainH = ah - usedH; }
+  }
+
+  // 5. Description
+  const descSizes = [10.5,10,9.5,8.5,8,7.5,7];
+  let descFs = 7, descOpacity = 0;
+  if (d.desc && remainH > 20 && subOpacity > 0) {
+    for (const s of descSizes) {
+      if (tm['d'+s] && tm['d'+s].w <= aw * 2) {
+        descFs = s;
+        descOpacity = remainH > 50 ? 0.4 : remainH > 30 ? 0.25 : 0;
+        break;
+      }
+    }
+  }
+
+  // 6. Default subtitle (for tiles without numbers) — mutually exclusive with subtitle
+  const defSubOpacity = (subOpacity === 0 && !hasNum && d.subtitle && remainH > 20) ? 0.4 : 0;
+
+  return { nfs, nvfs, nufs, badgeFs, subFs, descFs, pad,
+           showName, showNum, subOpacity, descOpacity, defSubOpacity };
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CURSOR INTERACTION — Gaussian + color/shadow
+   ═══════════════════════════════════════════════════════════ */
+function updateWeights() {
+  if (!cursorIn || cx < 0) {
+    DATA.forEach(d => { d.targetWeight = d.baseWeight; d._hover = 0; });
+    return;
+  }
+  for (let i = 0; i < DATA.length; i++) {
+    const l = currentLayout[i];
+    const dx = cx - (l.x + l.w / 2);
+    const dy = cy - (l.y + l.h / 2);
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    const nd = dist / CURSOR_R;
+    const inf = Math.exp(-nd * nd * 2.5);
+    DATA[i].targetWeight = DATA[i].baseWeight * (MIN_SHRINK + (MAX_BOOST - MIN_SHRINK) * inf);
+    DATA[i]._hover = inf;
+  }
+}
+
+function smoothWeights() {
+  let mx = 0;
+  for (let i = 0; i < DATA.length; i++) {
+    const d = DATA[i];
+    const dw = d.targetWeight - d.smoothWeight;
+    d.smoothWeight += dw * W_LERP;
+    if (Math.abs(dw) > mx) mx = Math.abs(dw);
+    // Smooth hover
+    const dh = d._hover - d._smoothHover;
+    d._smoothHover += dh * HOVER_LERP;
+  }
+  return mx;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LAYOUT
+   ═══════════════════════════════════════════════════════════ */
+function computeLayout() {
+  const W = treemapEl.clientWidth;
+  const H = treemapEl.clientHeight;
+  if (W === 0 || H === 0) return;
+  computeFrozenLayout({ x: 0, y: 0, w: W, h: H });
+}
+
+function interpolateLayout() {
+  let mx = 0;
+  for (let i = 0; i < currentLayout.length; i++) {
+    const c = currentLayout[i], t = targetLayout[i];
+    c.x += (t.x - c.x) * LERP;
+    c.y += (t.y - c.y) * LERP;
+    c.w += (t.w - c.w) * LERP;
+    c.h += (t.h - c.h) * LERP;
+    const d = Math.max(Math.abs(t.x-c.x), Math.abs(t.y-c.y), Math.abs(t.w-c.w), Math.abs(t.h-c.h));
+    if (d > mx) mx = d;
+  }
+  return mx;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   APPLY LAYOUT — translate for position, width/height for size
+   ═══════════════════════════════════════════════════════════ */
+function applyLayout() {
+  for (let i = 0; i < tileEls.length; i++) {
+    const el = tileEls[i];
+    const l = currentLayout[i];
+    const r = refs[i];
+    const d = DATA[i];
+    const w = l.w, h = l.h;
+    const hv = d._smoothHover;
+
+    // Position via transform, size via w/h
+    el.style.transform = `translate(${l.x}px, ${l.y}px)`;
+    el.style.width = w + 'px';
+    el.style.height = h + 'px';
+
+    // Hover: color interpolation + shadow + glow
+    if (hv > 0.02) {
+      const hsl = SDG_HSL[d.sdg];
+      const lB = hv * 5;
+      const sB = hv * 10;
+      el.style.background = `hsl(${hsl[0]}, ${hsl[1] + sB}%, ${hsl[2] + lB}%)`;
+      // Elevated shadow
+      const shadowY = hv * 8;
+      const shadowBlur = hv * 20;
+      const shadowAlpha = hv * 0.15;
+      el.style.boxShadow = `0 ${shadowY}px ${shadowBlur}px rgba(0,0,0,${shadowAlpha})`;
+      el.style.zIndex = Math.round(hv * 10) + '';
+    } else {
+      el.style.background = '';
+      el.style.boxShadow = '';
+      el.style.zIndex = '';
+    }
+
+    // Content visibility — continuous adaptation
+    const vis = getVis(i, w, h);
+    const pv = prevVis[i];
+    const changed = !pv ||
+      pv.nfs !== vis.nfs || pv.showName !== vis.showName ||
+      pv.showNum !== vis.showNum || pv.subOpacity !== vis.subOpacity ||
+      pv.descOpacity !== vis.descOpacity || pv.defSubOpacity !== vis.defSubOpacity;
+
+    if (changed) {
+      prevVis[i] = { ...vis };
+
+      // Padding
+      const inner = el.querySelector('.tile-inner');
+      if (inner) inner.style.padding = vis.pad + 'px';
+
+      if (r.badge) {
+        r.badge.style.fontSize = vis.badgeFs + 'px';
+        r.badge.style.opacity = '0.4';
+        r.badge.style.display = vis.showName ? '' : 'none';
+      }
+      if (r.name) {
+        r.name.style.fontSize = vis.nfs + 'px';
+        r.name.style.display = vis.showName ? '' : 'none';
+      }
+      if (r.numBlock) {
+        r.numBlock.style.display = vis.showNum ? '' : 'none';
+        if (vis.showNum) {
+          r.numVals.forEach(v => v.style.fontSize = vis.nvfs + 'px');
+          r.numUnits.forEach(u => u.style.fontSize = vis.nufs + 'px');
+        }
+      }
+      if (r.sub) {
+        r.sub.style.fontSize = vis.subFs + 'px';
+        r.sub.style.opacity = vis.subOpacity + '';
+        r.sub.style.clipPath = vis.subOpacity > 0 ? 'inset(0 0 0 0)' : 'inset(0 0 100% 0)';
+      }
+      if (r.desc) {
+        r.desc.style.fontSize = vis.descFs + 'px';
+        r.desc.style.opacity = vis.descOpacity + '';
+        r.desc.style.clipPath = vis.descOpacity > 0 ? 'inset(0 0 0 0)' : 'inset(0 0 100% 0)';
+      }
+      if (r.defSub) {
+        r.defSub.style.fontSize = vis.subFs + 'px';
+        r.defSub.style.opacity = vis.defSubOpacity + '';
+        r.defSub.style.display = vis.defSubOpacity > 0 ? '' : 'none';
+      }
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ANIMATION LOOP
+   ═══════════════════════════════════════════════════════════ */
+let animating = false;
+
+function tick() {
+  const wd = smoothWeights();
+  computeLayout();
+  const pd = interpolateLayout();
+  applyLayout();
+  if (wd > 0.01 || pd > 0.3) { animating = true; requestAnimationFrame(tick); }
+  else animating = false;
+}
+
+function startAnim() { if (!animating) { animating = true; requestAnimationFrame(tick); } }
+
+/* ═══════════════════════════════════════════════════════════
+   MOUSE EVENTS
+   ═══════════════════════════════════════════════════════════ */
+treemapEl.addEventListener('mousemove', e => {
+  const b = treemapEl.getBoundingClientRect();
+  cx = e.clientX - b.left; cy = e.clientY - b.top;
+  cursorIn = true; updateWeights(); startAnim();
+});
+treemapEl.addEventListener('mouseleave', () => {
+  cursorIn = false; cx = cy = -1; updateWeights(); startAnim();
+});
+
+/* ═══════════════════════════════════════════════════════════
+   TOUCH EVENTS
+   ═══════════════════════════════════════════════════════════ */
+let touchActive = false, longPressT = null, touchExploring = false;
+let touchStartX = 0, touchStartY = 0;
+
+treemapEl.addEventListener('touchstart', e => {
+  e.preventDefault();
+  const t = e.touches[0], b = treemapEl.getBoundingClientRect();
+  cx = t.clientX - b.left; cy = t.clientY - b.top;
+  touchStartX = cx; touchStartY = cy;
+  cursorIn = true; touchActive = true;
+  longPressT = setTimeout(() => { touchExploring = true; }, 400);
+  updateWeights(); startAnim();
+}, { passive: false });
+
+treemapEl.addEventListener('touchmove', e => {
+  e.preventDefault();
+  if (!touchActive) return;
+  const t = e.touches[0], b = treemapEl.getBoundingClientRect();
+  const nx = t.clientX - b.left, ny = t.clientY - b.top;
+  if (!touchExploring && Math.hypot(nx - touchStartX, ny - touchStartY) > 10) {
+    clearTimeout(longPressT); touchExploring = true;
+  }
+  cx = nx; cy = ny; updateWeights(); startAnim();
+}, { passive: false });
+
+treemapEl.addEventListener('touchend', e => {
+  e.preventDefault(); clearTimeout(longPressT);
+  if (!touchExploring && touchActive) {
+    setTimeout(() => { cursorIn = false; cx = cy = -1; updateWeights(); startAnim(); }, 2000);
+  } else { cursorIn = false; cx = cy = -1; updateWeights(); startAnim(); }
+  touchActive = false; touchExploring = false;
+}, { passive: false });
+
+treemapEl.addEventListener('touchcancel', () => {
+  clearTimeout(longPressT); cursorIn = false; cx = cy = -1;
+  touchActive = false; touchExploring = false;
+  updateWeights(); startAnim();
+});
+
+/* ═══════════════════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════════════════ */
+function init() {
+  parseSDGColors();
+  createTiles();
+
+  DATA.forEach(d => { d.smoothWeight = d.baseWeight; d.targetWeight = d.baseWeight; d._smoothHover = 0; });
+
+  const W = treemapEl.clientWidth, H = treemapEl.clientHeight;
+  freezeRows(DATA, { x: 0, y: 0, w: W, h: H });
+  computeFrozenLayout({ x: 0, y: 0, w: W, h: H });
+
+  for (let i = 0; i < DATA.length; i++) currentLayout[i] = { ...targetLayout[i] };
+  applyLayout();
+}
+
+let resizeT;
+window.addEventListener('DOMContentLoaded', init);
+window.addEventListener('resize', () => {
+  clearTimeout(resizeT);
+  resizeT = setTimeout(() => {
+    DATA.forEach(d => { d.smoothWeight = d.baseWeight; d.targetWeight = d.baseWeight; d._smoothHover = 0; });
+    prevVis = new Array(DATA.length).fill(null);
+    const W = treemapEl.clientWidth, H = treemapEl.clientHeight;
+    freezeRows(DATA, { x: 0, y: 0, w: W, h: H });
+    computeFrozenLayout({ x: 0, y: 0, w: W, h: H });
+    for (let i = 0; i < DATA.length; i++) currentLayout[i] = { ...targetLayout[i] };
+    applyLayout();
+  }, 200);
+});
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SDG Treemap 可视化项目 — 说明文档</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Noto Sans SC','Inter',-apple-system,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    color: #1a1a1a; background: #fafaf9;
+    line-height: 1.8; font-size: 15px;
+  }
+  .container { max-width: 720px; margin: 0 auto; padding: 60px 32px 100px; }
+  h1 {
+    font-size: 24px; font-weight: 700; letter-spacing: -0.5px;
+    margin-bottom: 8px; line-height: 1.4;
+  }
+  h1 small { font-size: 14px; font-weight: 400; opacity: 0.35; display: block; margin-top: 4px; }
+  .intro {
+    font-size: 14px; color: #666; line-height: 1.9;
+    margin-bottom: 48px; padding-bottom: 32px;
+    border-bottom: 1px solid #e8e8e6;
+  }
+  h2 {
+    font-size: 13px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; color: #999;
+    margin: 48px 0 20px; padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+  }
+  h3 { font-size: 15px; font-weight: 700; margin: 28px 0 8px; color: #1a1a1a; }
+  p { margin-bottom: 12px; color: #444; text-align: justify; }
+  .files-table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 13px; }
+  .files-table th, .files-table td {
+    padding: 10px 14px; text-align: left; border-bottom: 1px solid #eee;
+  }
+  .files-table th { font-weight: 600; color: #999; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .files-table td { color: #333; }
+  .files-table code { font-family: 'SF Mono','Fira Code',monospace; font-size: 12px; background: #f0f0ee; padding: 2px 6px; border-radius: 3px; }
+  .tag {
+    display: inline-block; font-size: 10px; font-weight: 600;
+    padding: 2px 8px; border-radius: 10px; margin-right: 4px;
+    letter-spacing: 0.3px;
+  }
+  .tag-cn { background: #fef3cd; color: #6b5a00; }
+  .tag-en { background: #c8d4f8; color: #142a6e; }
+  .feature-grid { display: grid; grid-template-columns: 1fr; gap: 0; margin: 16px 0; }
+  .feature-item {
+    padding: 20px 0; border-bottom: 1px solid #f0f0ee;
+  }
+  .feature-item:last-child { border-bottom: none; }
+  .feature-num {
+    font-family: 'Inter',sans-serif; font-size: 11px; font-weight: 700;
+    color: #ccc; margin-bottom: 4px;
+  }
+  .feature-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .feature-desc { font-size: 13px; color: #666; line-height: 1.8; }
+  .code-block {
+    background: #f5f5f4; border-radius: 6px; padding: 14px 18px;
+    font-family: 'SF Mono','Fira Code',monospace; font-size: 12px;
+    line-height: 1.7; color: #555; margin: 12px 0;
+    overflow-x: auto; white-space: pre;
+  }
+  .highlight { background: #fef3cd; padding: 1px 4px; border-radius: 2px; }
+  .section-note {
+    font-size: 12px; color: #999; line-height: 1.7;
+    padding: 12px 16px; background: #f8f8f7; border-radius: 6px;
+    margin: 16px 0;
+  }
+  .back-top {
+    position: fixed; bottom: 20px; right: 20px;
+    font-size: 11px; color: #999; text-decoration: none;
+    background: #fff; padding: 6px 12px; border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: opacity 0.3s;
+  }
+  .back-top:hover { opacity: 0.7; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>
+  腾讯 SDG Treemap 可视化项目
+  <small>说明文档 · 2024.04</small>
+</h1>
+
+<div class="intro">
+  本项目以 Treemap（树图）形式，将腾讯在联合国 17 个可持续发展目标下的实践项目进行数据可视化呈现。支持 2024 / 2023 两个年份、中文 / 英文两种语言，共 4 个独立页面。每个页面为纯前端单文件（HTML + CSS + JS 内联），无外部依赖，可直接在浏览器中打开。
+</div>
+
+<h2>文件结构</h2>
+
+<table class="files-table">
+  <thead>
+    <tr><th>文件</th><th>语言</th><th>年份</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>sdg-treemap.html</code></td><td><span class="tag tag-cn">中文</span></td><td>2024</td></tr>
+    <tr><td><code>sdg-treemap-2023.html</code></td><td><span class="tag tag-cn">中文</span></td><td>2023</td></tr>
+    <tr><td><code>sdg-treemap-en.html</code></td><td><span class="tag tag-en">EN</span></td><td>2024</td></tr>
+    <tr><td><code>sdg-treemap-2023-en.html</code></td><td><span class="tag tag-en">EN</span></td><td>2023</td></tr>
+  </tbody>
+</table>
+
+<h2>核心功能</h2>
+
+<div class="feature-grid">
+
+  <div class="feature-item">
+    <div class="feature-num">01</div>
+    <div class="feature-title">Squarified Treemap 布局算法</div>
+    <div class="feature-desc">
+      基于经典 Squarify 算法，按项目权重分配色块面积。权重由数据丰富度自动计算——数字数量与量级、描述文字长度等因素综合评分，经 <span class="highlight">score^1.6</span> 指数放大形成最终权重。数据越丰富的项目占据越大面积。
+    </div>
+  </div>
+
+  <div class="feature-item">
+    <div class="feature-num">02</div>
+    <div class="feature-title">冻结行树结构（Frozen Row Tree）</div>
+    <div class="feature-desc">
+      初始化时执行一次 Squarify 确定递归树形行结构（哪些 tile 在同一行、切割方向横或竖）。后续鼠标交互时只在行内按权重比例重新分配尺寸，tile 不会跨行重排。保证动画平滑无跳动，布局计算复杂度从 O(n log n) 降至 O(n)。
+    </div>
+  </div>
+
+  <div class="feature-item">
+    <div class="feature-num">03</div>
+    <div class="feature-title">Canvas 文本预测量（Pretext）</div>
+    <div class="feature-desc">
+      借鉴 Pretext 库思路，初始化时用 Canvas <code>measureText()</code> 预计算所有文本在不同字号下的精确像素宽高，缓存为 <code>TextMetricsCache</code>。后续布局中根据 tile 实际尺寸与文本实际宽高做精确匹配——找到能放下的最大字号、判断是否需要换行、计算剩余空间决定显示哪些内容层级。整个过程为纯数学运算，零 DOM 查询。
+    </div>
+    <div class="code-block">预计算项：项目名 × 7档 | 数字 × 7档 | Badge × 7档 | 副标题 × 7档 | 描述 × 7档
+决策逻辑：可用宽度 → 选最大字号 → 计算行数 → 累计已用高度 → 剩余高度决定下一层内容</div>
+  </div>
+
+  <div class="feature-item">
+    <div class="feature-num">04</div>
+    <div class="feature-title">光标感应交互（Gaussian Decay）</div>
+    <div class="feature-desc">
+      鼠标在 treemap 区域移动时，靠近光标的 tile 膨胀放大，远处收缩。采用高斯衰减函数 <code>exp(-d²/r² × 2.5)</code> 计算影响权重，最近 tile 放大至 3.5×，最远缩小至 0.65×。权重变化和位置均使用 lerp 平滑插值，帧率稳定流畅。
+    </div>
+  </div>
+
+  <div class="feature-item">
+    <div class="feature-num">05</div>
+    <div class="feature-title">SDG 官方色彩系统</div>
+    <div class="feature-desc">
+      使用联合国 SDG 官方 17 色的淡色调（pastel tint）作为 tile 背景，17 个目标各有独立色系。鼠标悬浮时通过 HSL 插值动态提亮 + 阴影提升。导航栏数字 hover 时显示对应 SDG 鲜艳官方色。
+    </div>
+  </div>
+
+  <div class="feature-item">
+    <div class="feature-num">06</div>
+    <div class="feature-title">内容自适应完整显示</div>
+    <div class="feature-desc">
+      所有 tile 始终显示 SDG 序号 + 名称（如 <code>01. 无贫穷</code>）和项目名。基于预测量文本尺寸，精确选择能容纳的最大字号，渐进显示数字、副标题、描述。无数字的 tile 描述文字吸底显示。无论 tile 多小，鼠标经过膨胀后内容自然完整展开。
+    </div>
+  </div>
+
+  <div class="feature-item">
+    <div class="feature-num">07</div>
+    <div class="feature-title">导航栏形式设计</div>
+    <div class="feature-desc">
+      17 个 SDG 序号以 <code>01 | 02 | ... | 17</code> 排列，竖线高度为数字的两倍（28px），底部对齐。鼠标经过数字时对应 tile 高亮、其余变灰。纯展示用途，不可点击。
+    </div>
+  </div>
+
+  <div class="feature-item">
+    <div class="feature-num">08</div>
+    <div class="feature-title">前言毛玻璃浮层</div>
+    <div class="feature-desc">
+      鼠标悬浮在标题文字上时，全屏毛玻璃遮罩层（<code>backdrop-filter: blur(24px)</code>）淡入，前言文字居中两端对齐显示。仅标题文字触发，年份切换器和导航栏不触发。鼠标离开标题立即消失。
+    </div>
+  </div>
+
+  <div class="feature-item">
+    <div class="feature-num">09</div>
+    <div class="feature-title">年份 / 语言切换</div>
+    <div class="feature-desc">
+      标题右侧固定 <code>2024  2023</code> 年份切换，当前年份加粗，另一个可点击跳转。右上角固定 <code>中 / EN</code> 语言切换。四个页面交叉链接，年份切换保持语言不变，语言切换保持年份不变。
+    </div>
+  </div>
+
+  <div class="feature-item">
+    <div class="feature-num">10</div>
+    <div class="feature-title">触屏支持</div>
+    <div class="feature-desc">
+      完整的 touch 事件处理。点击展开 tile 2 秒后自动恢复；长按拖动进入探索模式，手指移动时 tile 跟随膨胀/收缩。<code>passive: false</code> 防止页面滚动干扰。
+    </div>
+  </div>
+
+  <div class="feature-item">
+    <div class="feature-num">11</div>
+    <div class="feature-title">入场动画</div>
+    <div class="feature-desc">
+      tile 以 <code>opacity: 0 + scale(0.92)</code> 初始状态，按顺序 stagger 淡入（每个延迟 30ms）。入场完成后切换为 JS 控制模式，移除 CSS transition 避免冲突。
+    </div>
+  </div>
+
+  <div class="feature-item">
+    <div class="feature-num">12</div>
+    <div class="feature-title">性能优化</div>
+    <div class="feature-desc">
+      CSS <code>contain: layout style paint</code> 容器隔离；<code>will-change: transform</code> 合成层提升；元素引用创建时缓存避免每帧 querySelector；可见性状态 diff 检查跳过无变化 DOM 写入；动画循环收敛后自动停止（<code>delta &lt; 0.01</code>）。
+    </div>
+  </div>
+
+</div>
+
+<h2>数据来源</h2>
+<p><strong>2024</strong> — 腾讯 2024 年度可持续发展报告，31 个实践项目</p>
+<p><strong>2023</strong> — 腾讯 2023 年度可持续发展报告，30 个实践项目</p>
+
+<h2>技术栈</h2>
+<div class="section-note">
+  纯原生 HTML5 + CSS3 + Vanilla JavaScript，无框架依赖<br>
+  字体：Google Fonts（Inter + Noto Sans SC）<br>
+  布局：Squarified Treemap + Frozen Row Tree（自研实现）<br>
+  文本测量：Canvas 2D measureText() API（Pretext 思路）<br>
+  动画：requestAnimationFrame + lerp 插值
+</div>
+
+<h2>浏览器兼容</h2>
+<p>Chrome / Edge / Safari / Firefox 最新版本。移动端 Safari / Chrome 触屏交互。需要支持 <code>backdrop-filter</code>（前言毛玻璃效果）。</p>
+
+<h2>使用方式</h2>
+<p>直接在浏览器中打开 <code>sdg-treemap.html</code> 即可查看 2024 中文版。通过标题旁的年份按钮和右上角的语言按钮切换不同版本。</p>
+
+</div>
+
+<a href="#" class="back-top">↑ 回到顶部</a>
+
+</body>
+</html>
