@@ -379,6 +379,97 @@
     .tile-inner {
       padding: 10px 12px;
     }
+
+    /* ─── Bottom Sheet ─── */
+    .bottom-sheet {
+      position: fixed; left: 0; right: 0; bottom: 0;
+      z-index: 200;
+      background: #fff;
+      border-radius: 16px 16px 0 0;
+      box-shadow: 0 -4px 24px rgba(0,0,0,0.12);
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+      max-height: 50vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      will-change: transform;
+    }
+    .bottom-sheet.open {
+      transform: translateY(0);
+    }
+    .bs-handle {
+      width: 40px; height: 4px;
+      background: #ccc; border-radius: 2px;
+      margin: 10px auto 0;
+    }
+    .bs-content {
+      padding: 12px 20px 20px;
+    }
+    .bs-badge {
+      display: inline-block;
+      font-size: 11px; font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .bs-title {
+      font-size: 16px; font-weight: 700;
+      line-height: 1.4;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .bs-numbers {
+      font-family: 'Inter', sans-serif;
+      font-size: 28px; font-weight: 900;
+      line-height: 1.2;
+      letter-spacing: -1px;
+      color: var(--text);
+      opacity: 0.85;
+      margin-bottom: 4px;
+    }
+    .bs-subtitle {
+      font-size: 13px; font-weight: 500;
+      line-height: 1.6;
+      color: var(--text-light);
+      margin-bottom: 6px;
+    }
+    .bs-desc {
+      font-size: 12.5px; font-weight: 400;
+      line-height: 1.8;
+      color: var(--text-light);
+    }
+    .bs-nav {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px solid #eee;
+    }
+    .bs-prev, .bs-next {
+      font-size: 22px; font-weight: 600;
+      color: var(--text);
+      opacity: 0.3;
+      cursor: pointer;
+      padding: 4px 12px;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .bs-prev:active, .bs-next:active { opacity: 0.6; }
+    .bs-indicator {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px; font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    /* Tile selection states for bottom sheet */
+    .tile.selected {
+      filter: brightness(1.05) saturate(1.3);
+      z-index: 10 !important;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.12) !important;
+    }
+    .tile.sheet-dimmed {
+      filter: grayscale(0.5) brightness(0.92);
+      opacity: 0.4;
+    }
   }
 
 </style>
@@ -408,6 +499,38 @@
 </div>
 
 <div class="treemap" id="treemap"></div>
+
+<div class="bottom-sheet" id="bottomSheet">
+  <div class="bs-handle"></div>
+  <div class="bs-content" id="bsContent">
+    <span class="bs-badge"></span>
+    <div class="bs-title"></div>
+    <div class="bs-numbers"></div>
+    <div class="bs-subtitle"></div>
+    <div class="bs-desc"></div>
+    <div class="bs-nav">
+      <span class="bs-prev">‹</span>
+      <span class="bs-indicator"></span>
+      <span class="bs-next">›</span>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-sheet" id="bottomSheet">
+  <div class="bs-handle"></div>
+  <div class="bs-content" id="bsContent">
+    <span class="bs-badge"></span>
+    <div class="bs-title"></div>
+    <div class="bs-numbers"></div>
+    <div class="bs-subtitle"></div>
+    <div class="bs-desc"></div>
+    <div class="bs-nav">
+      <span class="bs-prev">‹</span>
+      <span class="bs-indicator"></span>
+      <span class="bs-next">›</span>
+    </div>
+  </div>
+</div>
 
 
 
@@ -704,6 +827,16 @@ for (let i = 1; i <= 17; i++) {
   item.style.setProperty('--sdg-color', SDG_COLORS[i]);
   item.addEventListener('mouseenter', () => highlightSDG(i));
   item.addEventListener('mouseleave', () => clearHL());
+  item.addEventListener('click', () => {
+    if (!isMobile) return;
+    const idx = DATA.findIndex(d => d.sdg === i);
+    if (idx >= 0) openSheet(idx);
+  });
+  item.addEventListener('click', () => {
+    if (!isMobile) return;
+    const idx = DATA.findIndex(d => d.sdg === i);
+    if (idx >= 0) openSheet(idx);
+  });
   sdgNavEl.appendChild(item);
 }
 
@@ -1061,24 +1194,40 @@ function tick() {
 function startAnim() { if (!animating) { animating = true; requestAnimationFrame(tick); } }
 
 /* ═══════════════════════════════════════════════════════════
-   MOUSE EVENTS
+   MOBILE DETECTION
+   ═══════════════════════════════════════════════════════════ */
+let isMobile = window.matchMedia('(max-width:768px)').matches;
+window.addEventListener('resize', () => {
+  isMobile = window.matchMedia('(max-width:768px)').matches;
+});
+
+/* ═══════════════════════════════════════════════════════════
+   MOUSE EVENTS (PC only)
    ═══════════════════════════════════════════════════════════ */
 treemapEl.addEventListener('mousemove', e => {
+  if (isMobile) return;
   const b = treemapEl.getBoundingClientRect();
   cx = e.clientX - b.left; cy = e.clientY - b.top;
   cursorIn = true; updateWeights(); startAnim();
 });
 treemapEl.addEventListener('mouseleave', () => {
+  if (isMobile) return;
   cursorIn = false; cx = cy = -1; updateWeights(); startAnim();
 });
 
 /* ═══════════════════════════════════════════════════════════
-   TOUCH EVENTS
+   TOUCH EVENTS — mobile: tap-to-select; PC: Gaussian explore
    ═══════════════════════════════════════════════════════════ */
 let touchActive = false, longPressT = null, touchExploring = false;
 let touchStartX = 0, touchStartY = 0;
 
 treemapEl.addEventListener('touchstart', e => {
+  if (isMobile) {
+    const t = e.touches[0];
+    touchStartX = t.clientX; touchStartY = t.clientY;
+    touchActive = true;
+    return;
+  }
   e.preventDefault();
   const t = e.touches[0], b = treemapEl.getBoundingClientRect();
   cx = t.clientX - b.left; cy = t.clientY - b.top;
@@ -1089,6 +1238,7 @@ treemapEl.addEventListener('touchstart', e => {
 }, { passive: false });
 
 treemapEl.addEventListener('touchmove', e => {
+  if (isMobile) return;
   e.preventDefault();
   if (!touchActive) return;
   const t = e.touches[0], b = treemapEl.getBoundingClientRect();
@@ -1100,6 +1250,23 @@ treemapEl.addEventListener('touchmove', e => {
 }, { passive: false });
 
 treemapEl.addEventListener('touchend', e => {
+  if (isMobile) {
+    if (!touchActive) return;
+    touchActive = false;
+    const t = e.changedTouches[0];
+    if (Math.hypot(t.clientX - touchStartX, t.clientY - touchStartY) < 15) {
+      e.preventDefault();
+      const b = treemapEl.getBoundingClientRect();
+      const x = t.clientX - b.left, y = t.clientY - b.top;
+      const idx = hitTestTile(x, y);
+      if (idx >= 0) {
+        openSheet(idx);
+      } else {
+        closeSheet();
+      }
+    }
+    return;
+  }
   e.preventDefault(); clearTimeout(longPressT);
   if (!touchExploring && touchActive) {
     setTimeout(() => { cursorIn = false; cx = cy = -1; updateWeights(); startAnim(); }, 3000);
@@ -1110,8 +1277,104 @@ treemapEl.addEventListener('touchend', e => {
 treemapEl.addEventListener('touchcancel', () => {
   clearTimeout(longPressT); cursorIn = false; cx = cy = -1;
   touchActive = false; touchExploring = false;
-  updateWeights(); startAnim();
+  if (!isMobile) { updateWeights(); startAnim(); }
 });
+
+/* ═══════════════════════════════════════════════════════════
+   BOTTOM SHEET — Mobile Detail Panel
+   ═══════════════════════════════════════════════════════════ */
+const bottomSheet = document.getElementById('bottomSheet');
+const bsContent = document.getElementById('bsContent');
+let sheetIndex = -1;
+let bsTouchStartX = 0, bsTouchStartY = 0, bsTouchStartTime = 0;
+
+function hitTestTile(x, y) {
+  for (let i = 0; i < currentLayout.length; i++) {
+    const l = currentLayout[i];
+    if (x >= l.x && x <= l.x + l.w && y >= l.y && y <= l.y + l.h) return i;
+  }
+  return -1;
+}
+
+function openSheet(index) {
+  if (index < 0 || index >= DATA.length) return;
+  sheetIndex = index;
+  const d = DATA[index];
+  const sdgNum = String(d.sdg).padStart(2, '0');
+
+  bsContent.querySelector('.bs-badge').textContent = sdgNum + '. ' + SDG_NAMES[d.sdg];
+  bsContent.querySelector('.bs-title').textContent = d.project;
+
+  const numEl = bsContent.querySelector('.bs-numbers');
+  if (d.numbers && d.numbers.length > 0) {
+    numEl.innerHTML = d.numbers.map((n, i) =>
+      formatNumber(n) + (d.units && d.units[i] ? '<small style="font-size:14px;font-weight:500;opacity:0.5;margin-left:2px">' + d.units[i] + '</small>' : '')
+    ).join('<br>');
+    numEl.style.display = '';
+  } else {
+    numEl.innerHTML = '';
+    numEl.style.display = 'none';
+  }
+
+  bsContent.querySelector('.bs-subtitle').textContent = d.subtitle || '';
+  bsContent.querySelector('.bs-desc').textContent = d.desc || '';
+  bsContent.querySelector('.bs-indicator').textContent = (index + 1) + ' / ' + DATA.length;
+
+  tileEls.forEach((el, i) => {
+    el.classList.toggle('selected', i === index);
+    el.classList.toggle('sheet-dimmed', i !== index);
+  });
+
+  bottomSheet.classList.add('open');
+}
+
+function closeSheet() {
+  bottomSheet.classList.remove('open');
+  sheetIndex = -1;
+  tileEls.forEach(el => {
+    el.classList.remove('selected', 'sheet-dimmed');
+  });
+}
+
+function navigateSheet(delta) {
+  let next = sheetIndex + delta;
+  if (next < 0) next = 0;
+  if (next >= DATA.length) next = DATA.length - 1;
+  if (next !== sheetIndex) openSheet(next);
+}
+
+bottomSheet.querySelector('.bs-prev').addEventListener('click', () => navigateSheet(-1));
+bottomSheet.querySelector('.bs-next').addEventListener('click', () => navigateSheet(1));
+
+bottomSheet.addEventListener('touchstart', e => {
+  const t = e.touches[0];
+  bsTouchStartX = t.clientX;
+  bsTouchStartY = t.clientY;
+  bsTouchStartTime = Date.now();
+}, { passive: true });
+
+bottomSheet.addEventListener('touchend', e => {
+  const t = e.changedTouches[0];
+  const dx = t.clientX - bsTouchStartX;
+  const dy = t.clientY - bsTouchStartY;
+  const dt = Date.now() - bsTouchStartTime;
+  if (dt > 500) return;
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+    e.preventDefault();
+    navigateSheet(dx < 0 ? 1 : -1);
+    return;
+  }
+  if (dy > 80 && dy > Math.abs(dx) * 1.5) {
+    e.preventDefault();
+    closeSheet();
+  }
+}, { passive: false });
+
+bottomSheet.addEventListener('click', e => e.stopPropagation());
+
+/* ═══════════════════════════════════════════════════════════
+   SDG NAV — Mobile tap opens first project of that SDG
+   ═══════════════════════════════════════════════════════════ */
 
 /* ═══════════════════════════════════════════════════════════
    INIT
