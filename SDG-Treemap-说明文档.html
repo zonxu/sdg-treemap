@@ -186,14 +186,22 @@
 
   <div class="feature-item">
     <div class="feature-num">10</div>
-    <div class="feature-title">触屏支持</div>
+    <div class="feature-title">移动端探索模式（Bottom Sheet）</div>
     <div class="feature-desc">
-      完整的 touch 事件处理。点击展开 tile 2 秒后自动恢复；长按拖动进入探索模式，手指移动时 tile 跟随膨胀/收缩。<code>passive: false</code> 防止页面滚动干扰。
+      移动端（≤768px）采用全新交互范式：保留 Treemap 全貌作为视觉地图，点击色块后该色块高亮、其余变暗，底部滑出 Bottom Sheet 详情面板展示完整项目信息（SDG 标签、项目名、数据数字、副标题、完整描述）。面板内左右滑动可翻页浏览相邻项目，treemap 色块高亮联动。下滑面板或点击空白区域关闭。SDG 导航栏数字在移动端可点击，打开该 SDG 下第一个项目的详情面板。移动端禁用 Gaussian 光标膨胀效果，改为精准点击选中。
     </div>
   </div>
 
   <div class="feature-item">
     <div class="feature-num">11</div>
+    <div class="feature-title">PC 端触屏兼容</div>
+    <div class="feature-desc">
+      PC 端（>768px）保留完整的鼠标悬浮膨胀交互，行为完全不变。触屏平板等大屏设备仍使用 Gaussian 探索模式。
+    </div>
+  </div>
+
+  <div class="feature-item">
+    <div class="feature-num">12</div>
     <div class="feature-title">入场动画</div>
     <div class="feature-desc">
       tile 以 <code>opacity: 0 + scale(0.92)</code> 初始状态，按顺序 stagger 淡入（每个延迟 30ms）。入场完成后切换为 JS 控制模式，移除 CSS transition 避免冲突。
@@ -201,7 +209,7 @@
   </div>
 
   <div class="feature-item">
-    <div class="feature-num">12</div>
+    <div class="feature-num">13</div>
     <div class="feature-title">性能优化</div>
     <div class="feature-desc">
       CSS <code>contain: layout style paint</code> 容器隔离；<code>will-change: transform</code> 合成层提升；元素引用创建时缓存避免每帧 querySelector；可见性状态 diff 检查跳过无变化 DOM 写入；动画循环收敛后自动停止（<code>delta &lt; 0.01</code>）。
